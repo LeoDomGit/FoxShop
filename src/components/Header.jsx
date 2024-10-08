@@ -1,25 +1,21 @@
+/* eslint-disable */
 import logo from '../assets/logo.png';
 import Navbar from '../components/Navbar';
 import Search from '../components/Search';
 import { CiMenuBurger } from 'react-icons/ci';
 import { IoIosHeartEmpty } from 'react-icons/io';
-import { CiUser } from 'react-icons/ci';
 import { HiOutlineShoppingCart } from 'react-icons/hi2';
 import { useState } from 'react';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isUserDropdownVisible, setIsUserDropdownVisible] = useState(false);
-
-  const showUserDropdown = () => setIsUserDropdownVisible(true);
-  const hideUserDropdown = () => setIsUserDropdownVisible(false);
 
   return (
-    <header className='text-gray-900 py-4 px-8 md:px-32 bg-white drop-shadow-sm'>
-      <div className='container flex justify-between items-center'>
+    <header className='text-gray-900 py-4 px-2 lg:px-32 xl:px-32 md:px-8 bg-white drop-shadow-sm'>
+      <div className='container flex gap-2 justify-between items-center'>
         {/* Logo */}
         <a href='#'>
-          <img src={logo} alt='Logo' className='w-14' />
+          <img src={logo} alt='Logo' className='w-10 lg:w-14 xl:w-14 md:w-14' />
         </a>
 
         {/* Navbar */}
@@ -29,39 +25,31 @@ function Header() {
         />
 
         {/* Search Bar */}
-        {/* Search Bar */}
         <Search
-          searchClass='relative sm:flex xl:flex md:flex items-center justify-center gap-3 border-b-slate-900'
-          inputClass='py-2 md:80 lg:w-60 sm:w-40 pl-10 border text-sm rounded-full focus:bg-none focus:outline-none'
+          searchClass='relative sm:flex xl:flex lg:flex md:flex items-center justify-center gap-3 border-b-slate-900'
+          inputClass='lg:py-2 xl:py-2 md:py-2 p-1 md:w-80 xl:w-40 lg:w-80 w-40 pl-10 border text-sm rounded-full focus:bg-none focus:outline-none'
           iconPosition='absolute left-3 top-1/2 transform -translate-y-1/2 sm:left-3 sm:top-auto sm:translate-y-0'
         />
 
         {/* Icons for Heart, User, Cart */}
-        <div className='hidden xl:flex md:flex sm:flex items-center gap-8 text-gray-500 text-xl cursor-pointer'>
+        <div className='hidden xl:flex md:flex  items-center gap-10 text-gray-500 text-xl cursor-pointer z-10'>
           <IoIosHeartEmpty className='hover:text-[#fe5c17]' />
 
-          {/* User Icon with Dropdown */}
-          <div
-            className='relative'
-            onMouseEnter={showUserDropdown}
-            onMouseLeave={hideUserDropdown}
-          >
-            <CiUser className='hover:text-[#fe5c17] cursor-pointer' />
-
-            {/* Dropdown for user (login/register) */}
-            {isUserDropdownVisible && (
-              <div className='absolute right-0 text-sm mt-2 w-52 bg-white border rounded shadow-lg'>
-                <div className='absolute -top-2 left-0 w-full h-2'></div>
-
-                <ul className='p-2 font-light'>
-                  <li className='p-2 cursor-pointer'>Đăng nhập</li>
-                  <li className='p-2 cursor-pointer'>Tạo tài khoản</li>
-                </ul>
-              </div>
-            )}
-          </div>
-
           <HiOutlineShoppingCart className='hover:text-[#fe5c17]' />
+        </div>
+
+        {/* Login */}
+        <div>
+          <a
+            href='#'
+            class='px-3 py-1 lg:py-2 lg:px-6 shadow-sm hover:bg-orange-500 border border-slate-300 font-light text-gray-600 xl:text-base lg:text-base md:text-base  text-xs rounded-md'
+          >
+            Đăng nhập
+          </a>
+          {/* Avatar */}
+          {/* <a href='#' class='rounded-full w-8 lg:w-10 xl:w-10 md:w-10'>
+          <img src={logo} alt=''></img>
+        </a> */}
         </div>
 
         {/* Responsive Menu Button */}
@@ -70,19 +58,24 @@ function Header() {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         />
 
-        {/* Mobile Menu (Dropdown) */}
         <div
-          className={`absolute text-center xl:hidden top-20 left-0 w-full bg-white border-t transform transition-all ${
+          className={`absolute text-center xl:hidden  text-sm font-light top-3/4 left-0 w-full bg-white border-t transform transition-all ${
             isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
           }`}
           style={{ transition: 'transform 0.3s ease, opacity 0.3s ease' }}
         >
-          <Navbar
-            ulClass='p-2 flex flex-col text-center uppercase text-sm text-gray-500'
-            liClass='list-none w-full p-2 hover:bg-white hover:text-[#fe5c17] transition-all cursor-pointer'
-          />
+          {/* Tabs for Menu and Icons */}
+          <div className='flex  border-b'>
+            <div className=' w-full border-b-2 border-[#fe5c17] text-[#fe5c17]'></div>
+          </div>
 
-          {/* Search Bar */}
+          {/* Conditional Rendering based on the active tab */}
+          <div>
+            <Navbar
+              ulClass='flex flex-col text-start uppercase text-sm text-gray-500'
+              liClass='list-none px-8 border-b w-full p-2 hover:bg-white hover:text-[#fe5c17] transition-all cursor-pointer'
+            />
+          </div>
         </div>
       </div>
     </header>

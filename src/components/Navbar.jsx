@@ -18,7 +18,7 @@ function Navbar({ ulClass = '', liClass = '' }) {
         <Link to='#'>Liên hệ</Link>
       </li>
       <li className={liClass}>
-        <Link to='#'>Sản phẩm</Link>
+        <Link to='/products'>Sản phẩm</Link>
       </li>
 
       <li className='list-none px-8 border-b w-full p-2 hover:bg-white hover:text-[#fe5c17] transition-all cursor-pointer lg:hidden md:hidden xl:hidden '>

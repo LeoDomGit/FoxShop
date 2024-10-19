@@ -71,22 +71,22 @@ const Slider = () => {
           justify-content: center;
           align-items: center;
           position: absolute;
-          top: 50%; /* Căn giữa theo chiều dọc */
+          top: 50%;
           transform: translateY(-50%);
-          z-index: 10; /* Hiển thị mũi tên trên các slide */
+          z-index: 10;
         }
 
         .swiper-button-prev {
-          left: -20px; /* Đặt mũi tên bên trái, có thể điều chỉnh khoảng cách */
+          left: -20px;
         }
 
         .swiper-button-next {
-          right: -20px; /* Đặt mũi tên bên phải, có thể điều chỉnh khoảng cách */
+          right: -20px;
         }
 
         .swiper-button-prev:hover,
         .swiper-button-next:hover {
-          background-color: rgba(0, 0, 0, 0.6); /* Hiệu ứng hover */
+          background-color: rgba(0, 0, 0, 0.6);
           color: #fff;
         }
 

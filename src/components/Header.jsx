@@ -24,13 +24,13 @@ function Header() {
       <header className='text-black top-0 fixed flex items-center justify-center font-medium z-20  w-full shadow-md bg-white'>
         <div className='container lg:px-10  xl:px-24 md:px-4 px-2 py-4 flex gap-2 justify-between  items-center '>
           {/* Logo */}
-          <a href='#'>
+          <Link to='/'>
             <img
               src={logo}
               alt='Logo'
               className='w-10 lg:w-14 xl:w-14 md:w-14'
             />
-          </a>
+          </Link>
 
           {/* Navbar */}
           <Navbar
@@ -62,12 +62,11 @@ function Header() {
 
           {/* Login */}
           <div className='p-0'>
-            <a
-              href='#'
-              class='px-2 py-1 lg:py-2 lg:px-6 shadow-sm border hover:bg-slate-50 border-slate-300 xl:text-base lg:text-base md:text-base sm:text-base text-xs rounded-md'
-            >
-              Đăng nhập
-            </a>
+            <Link to='/login'>
+              <div class='px-2 py-1 lg:py-2 lg:px-6 shadow-sm border hover:bg-slate-50 border-slate-300 xl:text-base lg:text-base md:text-base sm:text-base text-xs rounded-md'>
+                Đăng nhập
+              </div>
+            </Link>
             {/* Avatar */}
             {/* <a href='#' class='rounded-full w-8 lg:w-10 xl:w-10 md:w-10'>
           <img src={logo} alt=''></img>

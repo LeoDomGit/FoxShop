@@ -14,3 +14,70 @@ body {
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
 }
+
+/* Đặt màu cho thanh trượt */
+input[type='range'] {
+  -webkit-appearance: none; /* Xóa kiểu dáng mặc định */
+  width: 100%; /* Đặt chiều rộng */
+}
+
+/* Đặt màu cho track (thanh chạy) */
+input[type='range']::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px; /* Chiều cao của track */
+  background: #ddd; /* Màu nền cho track */
+  border-radius: 5px; /* Bo tròn các góc */
+}
+
+/* Đặt màu cho thumb (thanh trượt) */
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Xóa kiểu dáng mặc định */
+  height: 20px; /* Chiều cao của thumb */
+  width: 20px; /* Chiều rộng của thumb */
+  background: #4caf50; /* Màu nền cho thumb */
+  border-radius: 50%; /* Bo tròn để thumb trông giống hình tròn */
+  cursor: pointer; /* Đặt con trỏ chuột thành pointer */
+}
+
+/* Tương tự cho Firefox */
+input[type='range']::-moz-range-track {
+  width: 100%;
+  height: 8px;
+  background: #ddd;
+  border-radius: 5px;
+}
+
+input[type='range']::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  background: #4caf50;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Tương tự cho IE */
+input[type='range']::-ms-track {
+  width: 100%;
+  height: 8px;
+  background: transparent; /* Bỏ nền */
+  border-color: transparent; /* Bỏ border */
+  color: transparent; /* Bỏ màu */
+}
+
+input[type='range']::-ms-fill-lower {
+  background: #ddd; /* Màu cho phần đã chạy */
+  border-radius: 5px; /* Bo tròn */
+}
+
+input[type='range']::-ms-fill-upper {
+  background: #ddd; /* Màu cho phần chưa chạy */
+  border-radius: 5px; /* Bo tròn */
+}
+
+input[type='range']::-ms-thumb {
+  height: 20px;
+  width: 20px;
+  background: #4caf50;
+  border-radius: 50%;
+  cursor: pointer;
+}

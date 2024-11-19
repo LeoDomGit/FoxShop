@@ -6,7 +6,7 @@ function Filter() {
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [minPrice, setMinPrice] = useState(0); // Giá tối thiểu
-  const [maxPrice, setMaxPrice] = useState(10000000); // Giá tối đa
+  const [maxPrice, setMaxPrice] = useState(300000); // Giá tối đa
 
   const categories = ['Áo sơ mi', 'Quần tây', 'Áo khoác', 'Phụ kiện'];
   const colors = ['Đỏ', 'Xanh', 'Đen', 'Trắng'];

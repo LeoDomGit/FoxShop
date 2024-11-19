@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -7,7 +7,19 @@ import { FreeMode, Navigation } from 'swiper/modules';
 
 import ProductItem from './ProductItem';
 
-const Slider = () => {
+const Slider = ({ products }) => {
+  const [sortedProducts, setSortedProducts] = useState([]);
+
+  useEffect(() => {
+    if (products) {
+      // Sắp xếp sản phẩm theo ngày mới nhất (giả sử dùng createdAt)
+      const sorted = [...products].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setSortedProducts(sorted);
+    }
+  }, [products]);
+
   return (
     <div className='container mx-auto lg:px-5 xl:px-24 md:px-4 lg:mt-5 px-5 mb-2 mt-2 xl:mt-5 md:mt-12 xl:mb-5 lg:mb-5 md:mb-5'>
       <div className='relative flex items-center justify-center mt-3 flex-col'>
@@ -23,19 +35,19 @@ const Slider = () => {
             },
             640: {
               slidesPerView: 3,
-              spaceBetween: 25,
+              spaceBetween: 5,
             },
             768: {
               slidesPerView: 3,
-              spaceBetween: 25,
+              spaceBetween: 5,
             },
             1024: {
-              slidesPerView: 4,
-              spaceBetween: 25,
+              slidesPerView: 3,
+              spaceBetween: 5,
             },
             1440: {
-              slidesPerView: 5,
-              spaceBetween: 25,
+              slidesPerView: 4,
+              spaceBetween: 4,
             },
           }}
           freeMode={true}
@@ -47,10 +59,9 @@ const Slider = () => {
           slidesPerGroup={2}
           className='w-full'
         >
-          {/* Các SwiperSlide chứa ProductItem */}
-          {Array.from({ length: 10 }).map((_, index) => (
-            <SwiperSlide key={index}>
-              <ProductItem />
+          {sortedProducts.slice(0, 10).map((product) => (
+            <SwiperSlide key={product.id}>
+              <ProductItem product={product} />
             </SwiperSlide>
           ))}
         </Swiper>

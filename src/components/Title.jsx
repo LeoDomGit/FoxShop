@@ -10,15 +10,6 @@ function Title({ title = '', content = '', linkTo = '' }) {
           {title}
         </span>
         <span className='text-[#262626]'>{content}</span>
-
-        <div className='flex items-center justify-end hover:text-[#fe5c17]'>
-          <span className='text-xs lg:text-sm md:text-sm xl:text-sm sm:text-sm'>
-            <Link to={linkTo}>Xem tất cả</Link>
-          </span>
-          <span className='text-xs lg:text-sm md:text-sm xl:text-sm sm:text-sm'>
-            <IoIosArrowForward />
-          </span>
-        </div>
       </div>
     </>
   );

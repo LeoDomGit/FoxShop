@@ -1,29 +1,77 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaGoogle } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from '../api/axios';
+import { loadCartFromLocalStorage } from '../stores/cart';
+import { useDispatch } from 'react-redux';
 
 function Login() {
   useEffect(() => {
     document.title = 'Đăng nhập';
   }, []);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post('/login', { email, password });
+      const token = response.data.token;
+      const user = response.data.user;
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('userId', user.id);
+      localStorage.setItem('avatar', user.avatar);
+      localStorage.setItem('phone', user.phone);
+      setEmail('');
+      setPassword('');
+      dispatch(loadCartFromLocalStorage());
+      navigate('/');
+    } catch (e) {
+      if (e.response && e.response.data.errors) {
+        const errorData = e.response.data.errors;
+        setErrors({
+          email: errorData.email ? errorData.email[0] : '',
+          password: errorData.password ? errorData.password[0] : '',
+        });
+      } else {
+        setErrors({ general: 'Có lỗi xảy ra, vui lòng thử lại sau.' });
+      }
+    }
+  };
+
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
       <div className='bg-white p-8 rounded-md shadow-lg w-full max-w-lg'>
         <h2 className='text-2xl font-semibold mb-6 text-center'>Đăng Nhập</h2>
 
+        {/* Hiển thị lỗi nếu có */}
+        {errors.general && (
+          <div className='text-red-500 text-sm mb-4'>{errors.general}</div>
+        )}
+
         {/* Form đăng nhập */}
-        <form className='space-y-4'>
+        <form onSubmit={handleLogin} className='space-y-4'>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
               Email
             </label>
             <input
               type='email'
-              className='w-full px-3 py-2 border border-gray-300 rounded-md outline-none'
-              name='email'
+              className={`w-full px-3 py-2 border rounded-md outline-none ${
+                errors.email ? 'border-red-500' : ''
+              }`}
               placeholder='Nhập email'
-              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
+            {errors.email && (
+              <p className='text-red-500 text-sm'>{errors.email}</p>
+            )}
           </div>
 
           <div>
@@ -32,18 +80,22 @@ function Login() {
             </label>
             <input
               type='password'
-              className='w-full px-3 py-2 border border-gray-300 rounded-md outline-none'
-              name='password'
+              className={`w-full px-3 py-2 border rounded-md outline-none ${
+                errors.password ? 'border-red-500' : ''
+              }`}
               placeholder='Nhập mật khẩu'
-              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
+            {errors.password && (
+              <p className='text-red-500 text-sm'>{errors.password}</p>
+            )}
           </div>
 
           <div className='flex items-center justify-end gap-1 text-gray-600'>
             <input
               type='checkbox'
-              name=''
-              id=''
+              id='rememberMe'
               className='checked:bg-[#fe5c17]'
             />
             <span className='text-[14px]'>Ghi nhớ tài khoản</span>

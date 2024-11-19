@@ -25,7 +25,7 @@ function Banner({ content = '' }) {
                 {content}
               </div>
               <div>
-                <Link to='#'>
+                <Link to='/products'>
                   <span className='py-2 px-3 text-center text-[#000] font-medium text-sm bg-[#fff] hover:bg-[#f9f9f9] rounded-md drop-shadow-md'>
                     Mua ngay
                   </span>

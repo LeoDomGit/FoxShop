@@ -1,10 +1,10 @@
 import React from 'react';
 import { IoIosArrowRoundForward } from 'react-icons/io';
-
+import { Link } from 'react-router-dom';
 function Footer() {
   return (
     <div>
-      <div className='mt-10 w-full bg-[#F5F4F4] p-4'>
+      <div className='mt-10 w-full bg-[#F5F4F4] p-12'>
         <div className='container mx-auto lg:px-5 xl:px-24 md:px-4 px-5 mb-2 mt-2 xl:mt-5 lg:mt-12 md:mt-12 xl:mb-5 lg:mb-5 md:mb-5'>
           {/* Grid cho cả phần chứa tên và phần input */}
           <div className='grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4'>
@@ -37,10 +37,19 @@ function Footer() {
                   Hỗ trợ
                 </span>
                 <div className='flex flex-col gap-1 text-sm text-[#010101]'>
-                  <span>Trung tâm trợ giúp</span>
-                  <span>Chính sách đổi trả</span>
-                  <span>Vận chuyển</span>
-                  <span>Chính sách mua hàng</span>
+                  <Link to='/help'>
+                    <span>Trung tâm trợ giúp</span>
+                  </Link>
+                  <Link to='/return-policy'>
+                    <span>Chính sách đổi trả</span>
+                  </Link>
+
+                  <Link to='/shipping-policy'>
+                    <span>Vận chuyển</span>
+                  </Link>
+                  <Link to='/purchase-policy'>
+                    <span>Chính sách mua hàng</span>
+                  </Link>
                 </div>
               </div>
 

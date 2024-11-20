@@ -5,14 +5,12 @@ import Filter from '../components/Filter';
 import ProductItem from '../components/ProductItem';
 import Pagination from '../components/Pagination';
 import { CiFilter } from 'react-icons/ci';
-import axios from 'axios';
+import axios from '../api/axios';
 
 function ProductPage() {
   useEffect(() => {
     document.title = 'Sản phẩm';
   }, []);
-
-  const baseURL = 'https://dashboard.trungthanhzone.com/public/api/products';
 
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +20,7 @@ function ProductPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`${baseURL}?page=${currentPage}`);
+        const response = await axios.get(`/products?page=${currentPage}`);
         let fetchedProducts = response.data.data;
 
         fetchedProducts.sort(

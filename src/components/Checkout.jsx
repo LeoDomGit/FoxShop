@@ -8,7 +8,7 @@ function Checkout() {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [communes, setCommunes] = useState([]);
-  const [productCache, setProductCache] = useState([]); // Khai báo productCache
+  const [productCache, setProductCache] = useState([]);
 
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
@@ -21,9 +21,7 @@ function Checkout() {
 
   const carts = useSelector((store) => store.cart.items);
 
-  // Fetch location and product data
   useEffect(() => {
-    // Fetch location data
     fetch(
       'https://raw.githubusercontent.com/qtv100291/Vietnam-administrative-division-json-server/refs/heads/master/db.json'
     )
@@ -35,7 +33,6 @@ function Checkout() {
       })
       .catch((error) => console.error('Error fetching location data:', error));
 
-    // Fetch product data
     async function fetchProducts() {
       try {
         const response = await axios.get(
@@ -47,7 +44,7 @@ function Checkout() {
 
         const requests = [];
         for (let page = 2; page <= totalPages; page++) {
-          requests.push(axios.get(`${response.config.url}?page=${page}`)); // Sửa cú pháp
+          requests.push(axios.get(`${response.config.url}?page=${page}`));
         }
 
         const responses = await Promise.all(requests);
@@ -64,7 +61,6 @@ function Checkout() {
     fetchProducts();
   }, []);
 
-  // Tính tổng tiền cho giỏ hàng
   const totalPrice = carts.reduce((sum, cartItem) => {
     const product = productCache.find(
       (product) => product.id === cartItem.productId
@@ -147,12 +143,14 @@ function Checkout() {
   };
 
   return (
-    <div className='p-4 bg-gray-100 rounded shadow-sm'>
-      <h4 className='text-lg font-semibold mb-4'>Thông tin thanh toán</h4>
+    <div className='p-4 bg-white rounded-lg shadow-md'>
+      <h4 className='text-lg font-semibold mb-6'>Thông tin thanh toán</h4>
 
       {/* Tỉnh/Thành phố */}
       <div className='mb-4'>
-        <label htmlFor='province'>Tỉnh/Thành Phố</label>
+        <label htmlFor='province' className='block text-sm font-medium mb-2'>
+          Tỉnh/Thành Phố
+        </label>
         <select
           id='province'
           value={selectedProvince}
@@ -161,6 +159,7 @@ function Checkout() {
             setSelectedDistrict('');
             setSelectedCommune('');
           }}
+          className='w-full border rounded-lg p-2'
         >
           <option value=''>Chọn tỉnh/thành phố</option>
           {provinces.map((province) => (
@@ -173,7 +172,9 @@ function Checkout() {
 
       {/* Quận/Huyện */}
       <div className='mb-4'>
-        <label htmlFor='district'>Quận/Huyện</label>
+        <label htmlFor='district' className='block text-sm font-medium mb-2'>
+          Quận/Huyện
+        </label>
         <select
           id='district'
           value={selectedDistrict}
@@ -181,6 +182,7 @@ function Checkout() {
             setSelectedDistrict(e.target.value);
             setSelectedCommune('');
           }}
+          className='w-full border rounded-lg p-2'
         >
           <option value=''>Chọn quận/huyện</option>
           {filteredDistricts.map((district) => (
@@ -193,11 +195,14 @@ function Checkout() {
 
       {/* Xã/Phường */}
       <div className='mb-4'>
-        <label htmlFor='commune'>Xã/Phường</label>
+        <label htmlFor='commune' className='block text-sm font-medium mb-2'>
+          Xã/Phường
+        </label>
         <select
           id='commune'
           value={selectedCommune}
           onChange={(e) => setSelectedCommune(e.target.value)}
+          className='w-full border rounded-lg p-2'
         >
           <option value=''>Chọn xã/phường</option>
           {filteredCommunes.map((commune) => (
@@ -210,58 +215,70 @@ function Checkout() {
 
       {/* Địa chỉ chi tiết */}
       <div className='mb-4'>
-        <label htmlFor='addressDetail'>Số nhà/Tên đường</label>
+        <label
+          htmlFor='addressDetail'
+          className='block text-sm font-medium mb-2'
+        >
+          Số nhà/Tên đường
+        </label>
         <input
           type='text'
           id='addressDetail'
           value={addressDetail}
           onChange={(e) => setAddressDetail(e.target.value)}
           placeholder='Số nhà/Tên đường'
+          className='w-full border rounded-lg p-2'
         />
       </div>
 
       {/* Số điện thoại */}
       <div className='mb-4'>
-        <label htmlFor='phone'>Số điện thoại</label>
+        <label htmlFor='phone' className='block text-sm font-medium mb-2'>
+          Số điện thoại
+        </label>
         <input
           type='text'
           name='phone'
           value={form.phone}
           onChange={handleChange}
           placeholder='Số điện thoại'
+          className='w-full border rounded-lg p-2'
         />
       </div>
 
       {/* Ghi chú */}
       <div className='mb-4'>
-        <label htmlFor='note'>Ghi chú</label>
+        <label htmlFor='note' className='block text-sm font-medium mb-2'>
+          Ghi chú
+        </label>
         <textarea
           name='note'
           value={form.note}
           onChange={handleChange}
           placeholder='Ghi chú đơn hàng'
+          className='w-full border rounded-lg p-2'
         />
       </div>
 
       {/* Tổng tiền */}
       <div className='mb-4'>
         <span className='text-sm font-semibold'>Tổng tiền:</span>
-        <span className='text-sm font-bold text-[#fe5117]'>
+        <span className='text-sm font-bold text-[#fe5117] ml-2'>
           {totalPrice.toLocaleString()} VND
         </span>
       </div>
 
       {/* Nút thanh toán */}
-      <div className='mb-4'>
+      <div className='flex flex-col gap-4'>
         <button
           onClick={() => handleCheckout('cash')}
-          className='btn btn-primary w-full'
+          className='bg-blue-500 text-white rounded-lg py-2'
         >
           Thanh toán khi nhận hàng
         </button>
         <button
           onClick={() => handleCheckout('card')}
-          className='btn btn-primary w-full mt-4'
+          className='bg-green-500 text-white rounded-lg py-2'
         >
           Thanh toán qua thẻ
         </button>

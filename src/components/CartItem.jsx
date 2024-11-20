@@ -3,22 +3,22 @@ import { GoPlus } from 'react-icons/go';
 import { FiMinus } from 'react-icons/fi';
 import { LiaTrashAltSolid } from 'react-icons/lia';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../api/axios';
 import { useDispatch } from 'react-redux';
 import { changeQuantity, removeFromCart } from '../stores/cart';
+import { toast } from 'react-toastify';
 
 const urlImage = process.env.REACT_APP_URL_IMAGE;
-const url = 'https://dashboard.trungthanhzone.com/public/api/products';
 
 async function fetchAllProducts() {
   try {
-    const response = await axios.get(url);
+    const response = await axios.get('/products');
     const totalPages = response.data.last_page;
     let allProducts = response.data.data;
 
     const requests = [];
     for (let page = 2; page <= totalPages; page++) {
-      requests.push(axios.get(`${url}?page=${page}`));
+      requests.push(axios.get(`products?page=${page}`));
     }
 
     const responses = await Promise.all(requests);
@@ -37,7 +37,7 @@ let productCache = null;
 
 function CartItem(props) {
   const { productId, quantity, size, color } = props.data;
-  const { isSelected, onSelectItem } = props;
+
   const [detail, setDetail] = useState({});
   const dispatch = useDispatch();
 
@@ -70,31 +70,29 @@ function CartItem(props) {
   };
 
   const handlePlusQuantity = () => {
-    dispatch(
-      changeQuantity({
-        productId,
-        quantity: quantity + 1,
-        size,
-        color,
-      })
-    );
+    if (quantity < detail.in_stock) {
+      dispatch(
+        changeQuantity({
+          productId,
+          quantity: quantity + 1,
+          size,
+          color,
+        })
+      );
+    } else {
+      toast.error('Đã quá giới hạn số lượng sản phẩm còn trong kho.');
+    }
   };
 
   const handleRemoveFromCart = () => {
     dispatch(removeFromCart({ productId, size, color }));
+    toast.info('Đã xóa sản phẩm khỏi giỏ hàng');
   };
 
   return (
     <div>
       <div className='border-b border-gray-200 pb-2'>
         <div className='flex items-center mt-3'>
-          <input
-            type='checkbox'
-            style={{ accentColor: '#fe5c17' }}
-            className='mr-2 w-4 h-4 bg-gray-100 border-gray-300 rounded dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600'
-            checked={isSelected}
-            onChange={() => onSelectItem(productId, size, color)}
-          />
           {detail.image && (
             <img
               className='w-32 h-32 object-cover rounded'
@@ -114,7 +112,7 @@ function CartItem(props) {
                 <div className='flex items-center gap-3'>
                   <span className='text-gray-600'>Giá: </span>
                   <span className='text-[#fe5c17]'>
-                    {(detail.price * quantity).toLocaleString('vi-VN')}đ
+                    {`${Number(detail.price).toLocaleString('vi-VN')}đ`}
                   </span>
                 </div>
               </div>

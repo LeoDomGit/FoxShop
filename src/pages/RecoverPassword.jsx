@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
 function RecoverPassword() {
   const { token, email } = useParams(); // Lấy token và email từ URL
@@ -16,19 +18,41 @@ function RecoverPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Show loading toast while waiting for the API request
+    const loadingToastId = toast.loading('Đang xử lý, vui lòng đợi...');
+
     try {
       const response = await axios.post('/resetPassword', {
         token,
-        email: decodeURIComponent(email), // Giải mã email từ URL
+        email: decodeURIComponent(email),
         password,
         password_confirmation: passwordConfirmation,
       });
+
       setMessage(response.data.status);
       setError('');
-      setTimeout(() => navigate('/login'), 2000); // Chuyển hướng sau khi thành công
+
+      // Update the toast to show success and redirect
+      toast.update(loadingToastId, {
+        render: 'Mật khẩu đã được thay đổi thành công.',
+        type: 'success',
+        isLoading: false,
+        autoClose: 5000,
+      });
+
+      setTimeout(() => navigate('/login'), 2000); // Redirect to login after success
     } catch (err) {
       setMessage('');
       setError(err.response?.data?.errors || 'Đã xảy ra lỗi.');
+
+      // Update the toast to show error message
+      toast.update(loadingToastId, {
+        render: 'Đã xảy ra lỗi, vui lòng thử lại!',
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      });
     }
   };
 

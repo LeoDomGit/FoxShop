@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaGoogle } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
+import { toast } from 'react-toastify';
 
 function Signup() {
   useEffect(() => {
@@ -29,6 +30,11 @@ function Signup() {
       return;
     }
 
+    // Hiển thị thông báo đang xử lý
+    const loadingToastId = toast.loading(
+      'Đang xử lý vui lòng đợi trong giây lát.'
+    );
+
     try {
       await axios.post('/register', {
         name,
@@ -38,14 +44,32 @@ function Signup() {
         password_confirm,
       });
 
+      // Xóa form và lỗi
       setName('');
       setEmail('');
       setPhone('');
       setPassword('');
       setPasswordConfirmation('');
       setErrors({});
-      navigate('/login');
+
+      // Cập nhật toast sau khi đăng ký thành công
+      toast.update(loadingToastId, {
+        render: 'Đăng kí thành công!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 2000,
+      });
+
+      navigate('/login'); // Chuyển hướng về trang login
     } catch (e) {
+      // Cập nhật toast nếu có lỗi
+      toast.update(loadingToastId, {
+        render: 'Có lỗi xảy ra, vui lòng thử lại!',
+        type: 'error',
+        isLoading: false,
+        autoClose: 2000,
+      });
+
       if (e.response && e.response.data && e.response.data.errors) {
         setErrors(e.response.data.errors);
       }

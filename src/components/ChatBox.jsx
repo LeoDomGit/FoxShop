@@ -18,7 +18,7 @@ const ChatBox = () => {
       if (window.chatwootSDK) {
         window.chatwootSDK.run({
           websiteToken: process.env.REACT_APP_URL_CHATBOX_TOKEN,
-          baseUrl: 'https://app.ahaspot.com',
+          baseUrl: process.env.REACT_APP_URL_CHATBOX,
         });
       }
     };

@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../api/axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
 function Forgot() {
   const [email, setEmail] = useState('');
@@ -8,18 +10,37 @@ function Forgot() {
 
   useEffect(() => {
     document.title = 'Quên mật khẩu';
+    // No need to configure toast here anymore
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Show a loading toast while waiting for the request to complete
+    const loadingToastId = toast.loading('Đang xử lý, vui lòng đợi...');
+
     try {
       const response = await axios.post('/forgot', { email });
-      // console.log(response.data);
+
+      // Success: Update the toast and show success message
       setMessage(response.data.message);
       setError('');
+      toast.update(loadingToastId, {
+        render: 'Kiểm tra email của bạn để đặt lại mật khẩu.',
+        type: 'success',
+        isLoading: false,
+        autoClose: 5000,
+      });
     } catch (err) {
+      // Error: Update the toast and show error message
       setMessage('');
       setError(err.response?.data?.errors?.email || 'Đã xảy ra lỗi.');
+      toast.update(loadingToastId, {
+        render: 'Đã xảy ra lỗi, vui lòng thử lại!',
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      });
     }
   };
 

@@ -27,6 +27,17 @@ function ProductDetail() {
   const [sizeError, setSizeError] = useState(null);
   const [colorError, setColorError] = useState(null);
 
+  const handleSizeSelect = (size) => setSelectedSize(size);
+  const handleColorSelect = (color) => setSelectedColor(color);
+
+  // Tách các thuộc tính thành hai danh sách riêng: size và color
+  const sizeAttributes = product?.attributes?.filter(
+    (attr) => attr.type === 'size'
+  );
+
+  const colorAttributes = product?.attributes?.filter(
+    (attr) => attr.type === 'color'
+  );
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,7 +65,7 @@ function ProductDetail() {
     document.title = product ? product.name : 'Tên sản phẩm';
   }, [product]);
 
-  const handleSizeSelect = (size) => setSelectedSize(size);
+  // const handleSizeSelect = (size) => setSelectedSize(size);
   const handleIncrease = () => setQuantity((prevQuantity) => prevQuantity + 1);
   const handleDecrease = () =>
     quantity > 1 && setQuantity((prevQuantity) => prevQuantity - 1);
@@ -130,28 +141,27 @@ function ProductDetail() {
               <div className='font-medium text-sm mt-4'>
                 Màu:
                 <div className='flex space-x-2'>
-                  {product.attributes
-                    ?.filter((attr) => attr.name === 'color')
-                    .map((colorAttr, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setSelectedColor(colorAttr.type)}
-                        className={`w-6 h-6 rounded-full border border-gray-200 ${
-                          selectedColor === colorAttr.type
-                            ? 'ring-2 ring-offset-2 ring-[#fe5c17]'
-                            : ''
-                        }`}
-                        style={{
-                          backgroundColor: colorAttr.type,
-                        }}
-                      ></button>
-                    ))}
+                  {colorAttributes?.map((colorAttr, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleColorSelect(colorAttr.value)} // Lấy giá trị màu
+                      className={`w-6 h-6 rounded-full border border-gray-200 ${
+                        selectedColor === colorAttr.value
+                          ? 'ring-2 ring-offset-2 ring-[#fe5c17]'
+                          : ''
+                      }`}
+                      style={{
+                        backgroundColor: colorAttr.value, // Hiển thị màu sắc từ giá trị
+                      }}
+                    ></button>
+                  ))}
                 </div>
                 {colorError && (
                   <p className='text-red-500 mt-2'>{colorError}</p>
                 )}
               </div>
             </div>
+
             <div className='font-medium mb-4 flex flex-col mt-8'>
               <div className='text-gray-500 mb-2 flex gap-3 items-center'>
                 <span className='text-[24px] text-[#fe5c17]'>
@@ -166,27 +176,28 @@ function ProductDetail() {
                 </span>
               </div>
             </div>
+
             <div className='mt-4'>
               <div className='mt-5'>
-                <h2 className='text-[16px] font-semibold mb-2'>Chọn size</h2>
+                <h2 className='text-[14px] font-semibold mb-2'>Chọn size</h2>
                 <div className='flex space-x-4'>
-                  {product.attributes
-                    ?.filter((attr) => attr.name === 'size')
-                    .map((attr, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleSizeSelect(attr.type)}
-                        className={`px-3 py-1 border ${
-                          selectedSize === attr.type
-                            ? 'bg-[#fe5c17] text-white'
-                            : 'bg-gray-200 text-gray-700'
-                        }`}
-                      >
-                        {attr.type}
-                      </button>
-                    ))}
+                  {sizeAttributes?.map((attr, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleSizeSelect(attr.value)} // Lấy giá trị size
+                      className={`px-3 py-1 border ${
+                        selectedSize === attr.value
+                          ? 'bg-[#fe5c17] text-white'
+                          : 'bg-gray-200 text-gray-700'
+                      }`}
+                    >
+                      {attr.value} {/* Hiển thị giá trị size */}
+                    </button>
+                  ))}
                 </div>
-                {sizeError && <p className='text-red-500 mt-2'>{sizeError}</p>}
+                {sizeError && (
+                  <p className='text-red-500 mt-2 text-[14px]'>{sizeError}</p>
+                )}
               </div>
             </div>
 

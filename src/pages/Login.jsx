@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import { loadCartFromLocalStorage } from '../stores/cart';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 function Login() {
   useEffect(() => {
@@ -18,6 +19,10 @@ function Login() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
+
+    // Hiển thị thông báo đang đăng nhập
+    const loadingToastId = toast.loading('Đang đăng nhập...');
+
     try {
       const response = await axios.post('/login', { email, password });
       const token = response.data.token;
@@ -30,8 +35,25 @@ function Login() {
       setEmail('');
       setPassword('');
       dispatch(loadCartFromLocalStorage());
-      navigate('/');
+
+      // Đóng thông báo loading sau khi đăng nhập thành công
+      toast.update(loadingToastId, {
+        render: 'Đăng nhập thành công!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 2000,
+      });
+
+      navigate('/'); // Chuyển hướng về trang chủ
     } catch (e) {
+      // Đóng thông báo loading sau khi có lỗi
+      toast.update(loadingToastId, {
+        render: 'Đăng nhập thất bại, vui lòng thử lại!',
+        type: 'error',
+        isLoading: false,
+        autoClose: 2000,
+      });
+
       if (e.response && e.response.data.errors) {
         const errorData = e.response.data.errors;
         setErrors({

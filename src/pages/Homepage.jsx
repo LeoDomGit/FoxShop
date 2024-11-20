@@ -1,4 +1,5 @@
 // HomePage.jsx
+
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Banner from '../components/Banner';
@@ -10,7 +11,7 @@ import LookBook from '../components/LookBook';
 import SliderImage from '../components/SliderImage';
 import Footer from '../components/Footer';
 import ProductItem from '../components/ProductItem';
-import axios from 'axios';
+import axios from '../api/axios';
 
 const randomProduct = (array) => {
   return array.sort(() => Math.random() - 0.5);
@@ -21,13 +22,12 @@ function HomePage() {
     document.title = 'Trang chủ';
   }, []);
   // GET ALL PR
-  const url = 'https://dashboard.trungthanhzone.com/public/api/products';
 
   const [products, setProducts] = useState([]);
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(url);
+        const response = await axios.get('/products');
         setProducts(response.data.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -38,9 +38,6 @@ function HomePage() {
   }, []);
 
   // GET POLO
-
-  const urlPolo =
-    'https://dashboard.trungthanhzone.com/public/api/products/products-category/3';
 
   const [polo, setPolo] = useState([]);
   const [randomPolo, setRandomPolo] = useState([]);
@@ -54,7 +51,7 @@ function HomePage() {
   useEffect(() => {
     const fetchPolo = async () => {
       try {
-        const response = await axios.get(urlPolo);
+        const response = await axios.get('/products/products-category/3');
         setPolo(response.data);
       } catch (err) {
         console.error('Error', err);

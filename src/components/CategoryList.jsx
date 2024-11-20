@@ -1,18 +1,15 @@
-/*eslint-disable*/
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../api/axios';
 
 const cateImageUrl = process.env.REACT_APP_URL_IMAGE_CATE;
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [randomCategories, setRandomCategories] = useState([]);
-  const categoriesUrl =
-    'https://dashboard.trungthanhzone.com/public/api/categories';
 
   const fetchCategoriess = async () => {
     try {
-      const response = await axios.get(categoriesUrl);
+      const response = await axios.get('/categories');
       setCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories', error);

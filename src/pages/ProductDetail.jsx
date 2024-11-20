@@ -7,10 +7,11 @@ import { FiMinus } from 'react-icons/fi';
 import Slider from '../components/Slider'; // Import Slider
 import Comment from '../components/Comment';
 import Footer from '../components/Footer';
-import axios from 'axios';
+import axios from '../api/axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../stores/cart';
+import { toast } from 'react-toastify';
 
 const urlImage = process.env.REACT_APP_URL_IMAGE;
 
@@ -41,16 +42,14 @@ function ProductDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: productData } = await axios.get(
-          `https://dashboard.trungthanhzone.com/public/api/products/${slug}`
-        );
+        const { data: productData } = await axios.get(`/products/${slug}`);
         setProduct(productData);
         setSlides(productData.gallery?.map((image) => image.image) || []);
 
         const categoryId = productData.categories?.[0]?.id;
         if (categoryId) {
           const { data: relatedProductsData } = await axios.get(
-            `https://dashboard.trungthanhzone.com/public/api/products/products-category/${categoryId}`
+            `/products/products-category/${categoryId}`
           );
           setRelatedProducts(relatedProductsData || []);
         }
@@ -66,13 +65,20 @@ function ProductDetail() {
   }, [product]);
 
   // const handleSizeSelect = (size) => setSelectedSize(size);
-  const handleIncrease = () => setQuantity((prevQuantity) => prevQuantity + 1);
+  const handleIncrease = () => {
+    if (quantity < product.in_stock) {
+      setQuantity((prevQuantity) => prevQuantity + 1);
+    } else {
+      toast.error('Số lượng vượt quá hàng trong kho!');
+    }
+  };
   const handleDecrease = () =>
     quantity > 1 && setQuantity((prevQuantity) => prevQuantity - 1);
 
   const handleAddToCart = () => {
     const userId = localStorage.getItem('userId');
     if (!userId) {
+      alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.');
       navigate('/login');
       return;
     }
@@ -92,6 +98,7 @@ function ProductDetail() {
           color: selectedColor,
         })
       );
+      toast.success('Thêm sản phẩm vào giỏ hàng thành công!');
       navigate('/cart');
     }
   };
@@ -177,7 +184,12 @@ function ProductDetail() {
               </div>
             </div>
 
-            <div className='mt-4'>
+            <span className='text-[14px] mt-2 font-medium'>
+              <span>Còn lại trong kho:</span>{' '}
+              <span className='text-[#fe5c17]'>{product.in_stock}</span>
+            </span>
+
+            <div className='mt-2'>
               <div className='mt-5'>
                 <h2 className='text-[14px] font-semibold mb-2'>Chọn size</h2>
                 <div className='flex space-x-4'>

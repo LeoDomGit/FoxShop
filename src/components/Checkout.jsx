@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import axios from '../api/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector, useDispatch } from 'react-redux'; // Import useDispatch
+import { clearCart } from '../stores/cart'; // Import clearCart action
 
 function Checkout() {
   const [provinces, setProvinces] = useState([]);
@@ -20,6 +21,7 @@ function Checkout() {
   });
 
   const carts = useSelector((store) => store.cart.items);
+  const dispatch = useDispatch(); // Declare dispatch
 
   useEffect(() => {
     fetch(
@@ -35,9 +37,8 @@ function Checkout() {
 
     async function fetchProducts() {
       try {
-        const response = await axios.get(
-          'https://dashboard.trungthanhzone.com/public/api/products'
-        );
+        const baseUrl = process.env.REACT_APP_BASE_URL;
+        const response = await axios.get(`${baseUrl}/products`);
         const totalPages = response.data.last_page;
 
         let allProducts = response.data.data;
@@ -120,6 +121,7 @@ function Checkout() {
         });
         toast.success('Đặt hàng thành công!');
         console.log('Order saved successfully:', response.data);
+        dispatch(clearCart());
       } else if (paymentMethod === 'card') {
         const response = await axios.post('/payment', {
           ...form,
@@ -143,145 +145,147 @@ function Checkout() {
   };
 
   return (
-    <div className='p-4 bg-white rounded-lg shadow-md'>
-      <h4 className='text-lg font-semibold mb-6'>Thông tin thanh toán</h4>
+    <div className=''>
+      <div className=' bg-white rounded-lg shadow-md p-4'>
+        <h4 className='text-lg font-semibold mb-6'>Thông tin thanh toán</h4>
 
-      {/* Tỉnh/Thành phố */}
-      <div className='mb-4'>
-        <label htmlFor='province' className='block text-sm font-medium mb-2'>
-          Tỉnh/Thành Phố
-        </label>
-        <select
-          id='province'
-          value={selectedProvince}
-          onChange={(e) => {
-            setSelectedProvince(e.target.value);
-            setSelectedDistrict('');
-            setSelectedCommune('');
-          }}
-          className='w-full border rounded-lg p-2'
-        >
-          <option value=''>Chọn tỉnh/thành phố</option>
-          {provinces.map((province) => (
-            <option key={province.idProvince} value={province.idProvince}>
-              {province.name}
-            </option>
-          ))}
-        </select>
-      </div>
+        {/* Tỉnh/Thành phố */}
+        <div className='mb-4'>
+          <label htmlFor='province' className='block text-sm font-medium mb-2'>
+            Tỉnh/Thành Phố
+          </label>
+          <select
+            id='province'
+            value={selectedProvince}
+            onChange={(e) => {
+              setSelectedProvince(e.target.value);
+              setSelectedDistrict('');
+              setSelectedCommune('');
+            }}
+            className='w-full border rounded-lg p-2 fo'
+          >
+            <option value=''>Chọn tỉnh/thành phố</option>
+            {provinces.map((province) => (
+              <option key={province.idProvince} value={province.idProvince}>
+                {province.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      {/* Quận/Huyện */}
-      <div className='mb-4'>
-        <label htmlFor='district' className='block text-sm font-medium mb-2'>
-          Quận/Huyện
-        </label>
-        <select
-          id='district'
-          value={selectedDistrict}
-          onChange={(e) => {
-            setSelectedDistrict(e.target.value);
-            setSelectedCommune('');
-          }}
-          className='w-full border rounded-lg p-2'
-        >
-          <option value=''>Chọn quận/huyện</option>
-          {filteredDistricts.map((district) => (
-            <option key={district.idDistrict} value={district.idDistrict}>
-              {district.name}
-            </option>
-          ))}
-        </select>
-      </div>
+        {/* Quận/Huyện */}
+        <div className='mb-4'>
+          <label htmlFor='district' className='block text-sm font-medium mb-2'>
+            Quận/Huyện
+          </label>
+          <select
+            id='district'
+            value={selectedDistrict}
+            onChange={(e) => {
+              setSelectedDistrict(e.target.value);
+              setSelectedCommune('');
+            }}
+            className='w-full border rounded-lg p-2 fo'
+          >
+            <option value=''>Chọn quận/huyện</option>
+            {filteredDistricts.map((district) => (
+              <option key={district.idDistrict} value={district.idDistrict}>
+                {district.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      {/* Xã/Phường */}
-      <div className='mb-4'>
-        <label htmlFor='commune' className='block text-sm font-medium mb-2'>
-          Xã/Phường
-        </label>
-        <select
-          id='commune'
-          value={selectedCommune}
-          onChange={(e) => setSelectedCommune(e.target.value)}
-          className='w-full border rounded-lg p-2'
-        >
-          <option value=''>Chọn xã/phường</option>
-          {filteredCommunes.map((commune) => (
-            <option key={commune.idCommune} value={commune.idCommune}>
-              {commune.name}
-            </option>
-          ))}
-        </select>
-      </div>
+        {/* Xã/Phường */}
+        <div className='mb-4'>
+          <label htmlFor='commune' className='block text-sm font-medium mb-2'>
+            Xã/Phường
+          </label>
+          <select
+            id='commune'
+            value={selectedCommune}
+            onChange={(e) => setSelectedCommune(e.target.value)}
+            className='w-full border rounded-lg p-2 fo'
+          >
+            <option value=''>Chọn xã/phường</option>
+            {filteredCommunes.map((commune) => (
+              <option key={commune.idCommune} value={commune.idCommune}>
+                {commune.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      {/* Địa chỉ chi tiết */}
-      <div className='mb-4'>
-        <label
-          htmlFor='addressDetail'
-          className='block text-sm font-medium mb-2'
-        >
-          Số nhà/Tên đường
-        </label>
-        <input
-          type='text'
-          id='addressDetail'
-          value={addressDetail}
-          onChange={(e) => setAddressDetail(e.target.value)}
-          placeholder='Số nhà/Tên đường'
-          className='w-full border rounded-lg p-2'
-        />
-      </div>
+        {/* Địa chỉ chi tiết */}
+        <div className='mb-4'>
+          <label
+            htmlFor='addressDetail'
+            className='block text-sm font-medium mb-2'
+          >
+            Số nhà/Tên đường
+          </label>
+          <input
+            type='text'
+            id='addressDetail'
+            value={addressDetail}
+            onChange={(e) => setAddressDetail(e.target.value)}
+            placeholder='Số nhà/Tên đường'
+            className='w-full border rounded-lg p-2 fo'
+          />
+        </div>
 
-      {/* Số điện thoại */}
-      <div className='mb-4'>
-        <label htmlFor='phone' className='block text-sm font-medium mb-2'>
-          Số điện thoại
-        </label>
-        <input
-          type='text'
-          name='phone'
-          value={form.phone}
-          onChange={handleChange}
-          placeholder='Số điện thoại'
-          className='w-full border rounded-lg p-2'
-        />
-      </div>
+        {/* Số điện thoại */}
+        <div className='mb-4'>
+          <label htmlFor='phone' className='block text-sm font-medium mb-2'>
+            Số điện thoại
+          </label>
+          <input
+            type='text'
+            name='phone'
+            value={form.phone}
+            onChange={handleChange}
+            placeholder='Số điện thoại'
+            className='w-full border rounded-lg p-2 fo'
+          />
+        </div>
 
-      {/* Ghi chú */}
-      <div className='mb-4'>
-        <label htmlFor='note' className='block text-sm font-medium mb-2'>
-          Ghi chú
-        </label>
-        <textarea
-          name='note'
-          value={form.note}
-          onChange={handleChange}
-          placeholder='Ghi chú đơn hàng'
-          className='w-full border rounded-lg p-2'
-        />
-      </div>
+        {/* Ghi chú */}
+        <div className='mb-4'>
+          <label htmlFor='note' className='block text-sm font-medium mb-2'>
+            Ghi chú
+          </label>
+          <textarea
+            name='note'
+            value={form.note}
+            onChange={handleChange}
+            placeholder='Ghi chú đơn hàng'
+            className='w-full border rounded-lg p-2 fo'
+          />
+        </div>
 
-      {/* Tổng tiền */}
-      <div className='mb-4'>
-        <span className='text-sm font-semibold'>Tổng tiền:</span>
-        <span className='text-sm font-bold text-[#fe5117] ml-2'>
-          {totalPrice.toLocaleString()} VND
-        </span>
-      </div>
+        {/* Tổng tiền */}
+        <div className='mb-4'>
+          <span className='text-sm font-semibold'>Tổng tiền:</span>
+          <span className='text-sm font-bold text-[#fe5117] ml-2'>
+            {totalPrice.toLocaleString()} VND
+          </span>
+        </div>
 
-      {/* Nút thanh toán */}
-      <div className='flex flex-col gap-4'>
-        <button
-          onClick={() => handleCheckout('cash')}
-          className='bg-blue-500 text-white rounded-lg py-2'
-        >
-          Thanh toán khi nhận hàng
-        </button>
-        <button
-          onClick={() => handleCheckout('card')}
-          className='bg-green-500 text-white rounded-lg py-2'
-        >
-          Thanh toán qua thẻ
-        </button>
+        {/* Nút thanh toán */}
+        <div className='flex flex-col gap-4'>
+          <button
+            onClick={() => handleCheckout('cash')}
+            className='bg-blue-500 text-white rounded-lg py-2'
+          >
+            Thanh toán khi nhận hàng
+          </button>
+          <button
+            onClick={() => handleCheckout('card')}
+            className='bg-green-500 text-white rounded-lg py-2'
+          >
+            Thanh toán qua thẻ
+          </button>
+        </div>
       </div>
     </div>
   );

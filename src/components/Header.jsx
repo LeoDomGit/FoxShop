@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { clearCartLogout } from '../stores/cart';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,6 +37,7 @@ function Header() {
     localStorage.removeItem('avatar');
     localStorage.removeItem('phone');
     dispatch(clearCartLogout());
+    toast.success('Đã đăng xuất.');
     navigate('/');
   };
 

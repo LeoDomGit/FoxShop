@@ -37,8 +37,7 @@ function Checkout() {
 
     async function fetchProducts() {
       try {
-        const baseUrl = process.env.REACT_APP_BASE_URL;
-        const response = await axios.get(`${baseUrl}/products`);
+        const response = await axios.get('/products');
         const totalPages = response.data.last_page;
 
         let allProducts = response.data.data;

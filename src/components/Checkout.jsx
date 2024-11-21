@@ -273,13 +273,13 @@ function Checkout() {
         {/* Nút thanh toán */}
         <div className='flex flex-col gap-4'>
           <button
-            onClick={() => handleCheckout('card')}
+            onClick={() => handleCheckout('cash')}
             className='bg-blue-500 text-white rounded-lg py-2'
           >
             Thanh toán khi nhận hàng
           </button>
           <button
-            onClick={() => handleCheckout('cash')}
+            onClick={() => handleCheckout('card')}
             className='bg-green-500 text-white rounded-lg py-2'
           >
             Thanh toán qua thẻ

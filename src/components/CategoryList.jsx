@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from '../api/axios';
 
-const cateImageUrl = process.env.REACT_APP_URL_IMAGE_CATE;
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [randomCategories, setRandomCategories] = useState([]);
@@ -38,19 +37,17 @@ const CategoryList = () => {
           {randomCategories.map((category) => {
             let images;
 
-            // Check if `category.images` is already a valid path or an array in JSON format
             if (
               typeof category.images === 'string' &&
               category.images.startsWith('[')
             ) {
               try {
-                images = JSON.parse(category.images); // Parse JSON if it's a JSON string
+                images = JSON.parse(category.images);
               } catch (error) {
                 console.error('Error parsing images JSON', error);
-                images = []; // Fallback in case of error
+                images = [];
               }
             } else {
-              // Handle case where `category.images` is a direct string path
               images = [category.images];
             }
 
@@ -64,7 +61,7 @@ const CategoryList = () => {
               >
                 <img
                   className='w-full h-[140px] md:h-[150px] sm:h-[150px] min-h-[150px] lg:h-[220px] xl:[220px] object-cover'
-                  src={`${cateImageUrl}${imageUrl}`}
+                  src={`https://dashboard.trungthanhzone.com${imageUrl}`}
                   alt={category.name}
                 />
                 <Link to={`${category.slug}`}>

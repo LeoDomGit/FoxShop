@@ -32,6 +32,7 @@ function Login() {
       localStorage.setItem('userId', user.id);
       localStorage.setItem('avatar', user.avatar);
       localStorage.setItem('phone', user.phone);
+      localStorage.setItem('name', user.name);
       setEmail('');
       setPassword('');
       dispatch(loadCartFromLocalStorage());

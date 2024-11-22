@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Profiler, useEffect } from 'react';
 import HomePage from './pages/Homepage';
 import ProductPage from './pages/ProductPage';
 import ProductDetail from './pages/ProductDetail';
@@ -17,6 +17,7 @@ import ReturnPolicy from './pages/ReturnPolicy';
 import ShippingPolicy from './pages/ShippingPolicy';
 import PurchasePolicy from './pages/PurchasePolicy';
 import ChatBox from './components/ChatBox';
+import Profile from './pages/Profile';
 
 import { useDispatch } from 'react-redux';
 import { loadCartFromLocalStorage } from './stores/cart';
@@ -50,6 +51,9 @@ function App() {
           <Route path='/signup' element={<Signup />} />
           {/* Route trang quên mật khẩu */}
           <Route path='/forgot' element={<Forgot />} />
+
+          {/* Route trang quản lý tài khoản */}
+          <Route path='/profile' element={<Profile />} />
           {/* Route lấy lại mật khẩu */}
           <Route
             path='/recover-password/:token/:email'

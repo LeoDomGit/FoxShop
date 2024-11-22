@@ -161,7 +161,7 @@ function Checkout() {
               setSelectedDistrict('');
               setSelectedCommune('');
             }}
-            className='w-full border rounded-lg p-2 fo'
+            className='w-full border rounded-lg p-2 focus:outline-none'
           >
             <option value=''>Chọn tỉnh/thành phố</option>
             {provinces.map((province) => (
@@ -184,7 +184,7 @@ function Checkout() {
               setSelectedDistrict(e.target.value);
               setSelectedCommune('');
             }}
-            className='w-full border rounded-lg p-2 fo'
+            className='w-full border rounded-lg p-2 focus:outline-none'
           >
             <option value=''>Chọn quận/huyện</option>
             {filteredDistricts.map((district) => (
@@ -204,7 +204,7 @@ function Checkout() {
             id='commune'
             value={selectedCommune}
             onChange={(e) => setSelectedCommune(e.target.value)}
-            className='w-full border rounded-lg p-2 fo'
+            className='w-full border rounded-lg p-2 focus:outline-none'
           >
             <option value=''>Chọn xã/phường</option>
             {filteredCommunes.map((commune) => (
@@ -229,7 +229,7 @@ function Checkout() {
             value={addressDetail}
             onChange={(e) => setAddressDetail(e.target.value)}
             placeholder='Số nhà/Tên đường'
-            className='w-full border rounded-lg p-2 fo'
+            className='w-full border rounded-lg p-2 focus:outline-none'
           />
         </div>
 
@@ -244,7 +244,7 @@ function Checkout() {
             value={form.phone}
             onChange={handleChange}
             placeholder='Số điện thoại'
-            className='w-full border rounded-lg p-2 fo'
+            className='w-full border rounded-lg p-2 focus:outline-none'
           />
         </div>
 
@@ -258,7 +258,7 @@ function Checkout() {
             value={form.note}
             onChange={handleChange}
             placeholder='Ghi chú đơn hàng'
-            className='w-full border rounded-lg p-2 fo'
+            className='w-full border rounded-lg p-2 focus:outline-none'
           />
         </div>
 

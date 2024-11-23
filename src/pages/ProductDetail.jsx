@@ -78,8 +78,8 @@ function ProductDetail() {
   const handleAddToCart = () => {
     const userId = localStorage.getItem('userId');
     if (!userId) {
-      alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.');
       navigate('/login');
+      toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.');
       return;
     }
 
@@ -256,7 +256,7 @@ function ProductDetail() {
         {/* Hiển thị sản phẩm liên quan */}
         <span className='font-semibold text-[20px]'>Sản phẩm liên quan</span>
       </div>
-      <Slider products={relatedProducts} /> <Comment />
+      <Slider products={relatedProducts} /> <Comment productId={product.id} />
       <Footer />
     </>
   );

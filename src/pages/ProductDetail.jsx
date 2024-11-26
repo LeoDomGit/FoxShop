@@ -64,7 +64,6 @@ function ProductDetail() {
     document.title = product ? product.name : 'Tên sản phẩm';
   }, [product]);
 
-  // const handleSizeSelect = (size) => setSelectedSize(size);
   const handleIncrease = () => {
     if (quantity < product.in_stock) {
       setQuantity((prevQuantity) => prevQuantity + 1);
@@ -99,7 +98,6 @@ function ProductDetail() {
         })
       );
       toast.success('Thêm sản phẩm vào giỏ hàng thành công!');
-      navigate('/cart');
     }
   };
 
@@ -110,7 +108,7 @@ function ProductDetail() {
   return (
     <>
       <Header />
-      <div className='container mx-auto lg:px-5 xl:px-24 md:px-4 px-5 mb-2 mt-[100px] xl:mt-[140px] lg:mt-[140px] sm:mt-[140px] md:mt-[140px] xl:mb-5 lg:mb-5 md:mb-5 flex flex-col gap-10'>
+      <div className='container mx-auto lg:px-5 xl:px-24 md:px-4 px-5 mb-2 mt-[100px] xl:mt-[140px] lg:mt-[180px] sm:mt-[140px] md:mt-[180px] xl:mb-5 lg:mb-5 md:mb-5 flex flex-col gap-10'>
         <div className='grid grid-cols-1 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 xl:grid-cols-2 gap-4'>
           <div>
             <Carousel>
@@ -151,20 +149,20 @@ function ProductDetail() {
                   {colorAttributes?.map((colorAttr, index) => (
                     <button
                       key={index}
-                      onClick={() => handleColorSelect(colorAttr.value)} // Lấy giá trị màu
+                      onClick={() => handleColorSelect(colorAttr.value)}
                       className={`w-6 h-6 rounded-full border border-gray-200 ${
                         selectedColor === colorAttr.value
                           ? 'ring-2 ring-offset-2 ring-[#fe5c17]'
                           : ''
                       }`}
                       style={{
-                        backgroundColor: colorAttr.value, // Hiển thị màu sắc từ giá trị
+                        backgroundColor: colorAttr.value,
                       }}
                     ></button>
                   ))}
                 </div>
                 {colorError && (
-                  <p className='text-red-500 mt-2'>{colorError}</p>
+                  <p className='text-red-500 mt-2 font-medium'>{colorError}</p>
                 )}
               </div>
             </div>
@@ -208,7 +206,9 @@ function ProductDetail() {
                   ))}
                 </div>
                 {sizeError && (
-                  <p className='text-red-500 mt-2 text-[14px]'>{sizeError}</p>
+                  <p className='text-red-500 mt-2 text-[14px] font-medium'>
+                    {sizeError}
+                  </p>
                 )}
               </div>
             </div>

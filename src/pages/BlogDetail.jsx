@@ -1,62 +1,65 @@
-import React from 'react';
-import Header from '../components/Header'; // Ensure path is correct
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import Header from '../components/Header';
 import Footer from '../components/Footer';
-import bannerImage from '../assets/image/banner1.png'; // Ensure path is correct
+import axios from '../api/axios'; // Giả sử bạn dùng axios để gọi API
 
 function BlogDetail() {
+  const { slug } = useParams(); // Lấy slug từ URL
+  const [post, setPost] = useState(null); // State lưu bài viết
+  const [loading, setLoading] = useState(true); // State theo dõi trạng thái tải
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`/post/${slug}`);
+        setPost(response.data); // Cập nhật dữ liệu bài viết
+        setLoading(false); // Dữ liệu đã được tải xong
+      } catch (error) {
+        console.error('Error fetching post:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [slug]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!post) {
+    return <div>Bài viết không tồn tại!</div>;
+  }
+
   return (
-    <div className='bg-gray-100 min-h-screen flex flex-col'>
-      {/* Header */}
+    <div>
       <Header />
 
-      {/* Content */}
-      <div className='flex-grow bg-white p-4 sm:p-6 lg:p-8 overflow-y-auto mt-[80px]'>
+      <div className='container mx-auto lg:px-5 xl:px-24 md:px-4 px-5 mb-2 mt-[100px] xl:mb-5 lg:mb-5 md:mb-5'>
         {/* Title */}
         <h1 className='text-3xl font-semibold text-center mb-4'>
-          5 Tips to Increase Your Online Sales
+          {post.title}
         </h1>
         <p className='text-center text-gray-500 text-sm mb-6'>
-          By Oliver Barrett in Company / January 18, 2024
+          Ngày đăng: {new Date(post.start_date).toLocaleDateString()}
         </p>
 
         {/* Image */}
         <div className='mb-6'>
           <img
             className='w-full h-[350px] sm:h-[400px] lg:h-[450px] object-cover'
-            src={bannerImage}
-            alt='Blog'
+            src={`https://dashboard.trungthanhzone.com${post.image}`}
+            alt={post.title}
           />
         </div>
 
         <div className='px-4 sm:px-8 lg:px-[50px]'>
-          {/* Subtitle */}
-          <h2 className='text-xl font-semibold text-gray-800 mb-4'>
-            Tree doesn’t good void, waters without created
-          </h2>
-
-          {/* Content */}
-          <p className='text-gray-700 leading-relaxed mb-4'>
-            Saw wherein fruitful good days image them, midst, waters upon, saw.
-            Seas lights seasons. Fourth hath rule Evening Creepth own lesser
-            years itself so seed fifth for grass evening fourth shall you’re
-            unto that. Had. Female replenish for yielding so all sea on yielding
-            grass you’ll air sea it, open waters subdue, hath.
-          </p>
-
-          {/* Bullet Points */}
-          <ul className='list-disc pl-5 text-gray-700 mb-4'>
-            <li>Upon seas hath every years have whose subdue;</li>
-            <li>Given they're tree abundantly male our;</li>
-            <li>May set creeping evening male void own seasons behold.</li>
-          </ul>
-
-          {/* Paragraph */}
-          <p className='text-gray-700 leading-relaxed mb-4'>
-            Brought second Made be. Under male male, firmament, beast had light
-            after fifth forth darkness thing hath sixth rule night multiply life
-            give they’re great. Together. Creature. Green. Them evening a and
-            light fourth.
-          </p>
+          <div
+            className='text-gray-700 leading-relaxed mb-4'
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          ></div>
+          <ul className='list-disc pl-5 text-gray-700 mb-4'></ul>
         </div>
       </div>
 

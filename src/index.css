@@ -15,6 +15,14 @@ body {
   text-overflow: ellipsis;
 }
 
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
 /* Đặt màu cho thanh trượt */
 input[type='range'] {
   -webkit-appearance: none; /* Xóa kiểu dáng mặc định */

@@ -24,6 +24,8 @@ import { loadCartFromLocalStorage } from './stores/cart';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SearchPage from './pages/SearchPage';
+import Orders from './pages/Orders';
 
 function App() {
   const dispatch = useDispatch();
@@ -54,13 +56,17 @@ function App() {
 
           {/* Route trang quản lý tài khoản */}
           <Route path='/profile' element={<Profile />} />
-          {/* Route lấy lại mật khẩu */}
+
+          {/* Route trang tìm kiếm */}
+          <Route path='/search' element={<SearchPage />} />
+          <Route path='/orders' element={<Orders />} />
+
           <Route
             path='/recover-password/:token/:email'
             element={<RecoverPassword />}
           />
           {/* Blog chi tiết */}
-          <Route path='/blog-detail' element={<BlogDetail />} />
+          <Route path='/post/:slug' element={<BlogDetail />} />
           {/* Trang giới thiệu */}
           <Route path='/about' element={<AboutPage />} />
           {/* Trung tâm trợ giúp */}

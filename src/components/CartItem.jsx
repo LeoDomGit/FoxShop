@@ -3,35 +3,12 @@ import { GoPlus } from 'react-icons/go';
 import { FiMinus } from 'react-icons/fi';
 import { LiaTrashAltSolid } from 'react-icons/lia';
 import { Link } from 'react-router-dom';
-import axios from '../api/axios';
 import { useDispatch } from 'react-redux';
 import { changeQuantity, removeFromCart } from '../stores/cart';
 import { toast } from 'react-toastify';
+import { fetchAllProducts } from '../services/productService'; // Import the function here
 
 const urlImage = process.env.REACT_APP_URL_IMAGE;
-
-async function fetchAllProducts() {
-  try {
-    const response = await axios.get('/products');
-    const totalPages = response.data.last_page;
-    let allProducts = response.data.data;
-
-    const requests = [];
-    for (let page = 2; page <= totalPages; page++) {
-      requests.push(axios.get(`products?page=${page}`));
-    }
-
-    const responses = await Promise.all(requests);
-    responses.forEach((res) => {
-      allProducts = allProducts.concat(res.data.data);
-    });
-
-    return allProducts;
-  } catch (error) {
-    console.error('Error fetching all products:', error);
-    return [];
-  }
-}
 
 let productCache = null;
 
@@ -44,7 +21,7 @@ function CartItem(props) {
   useEffect(() => {
     const getProductDetails = async () => {
       if (!productCache) {
-        productCache = await fetchAllProducts();
+        productCache = await fetchAllProducts(); // Call the imported function
       }
 
       const findDetail = productCache.find(
@@ -101,9 +78,8 @@ function CartItem(props) {
             />
           )}
           <div className='flex items-center space-x-2 mt-3'>
-            {/* Name */}
             <div className='ml-2'>
-              <div className=''>
+              <div>
                 <Link to={`/products/${detail.slug}`}>
                   <div className='text-[16px] font-medium hover:text-[#fe5c17]'>
                     {detail.name}
@@ -128,7 +104,6 @@ function CartItem(props) {
                 ></div>
               </div>
 
-              {/* Quantity */}
               <div className='mt-3 flex items-center gap-4'>
                 <div className='flex items-center'>
                   <button

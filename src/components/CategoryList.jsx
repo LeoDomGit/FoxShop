@@ -64,7 +64,7 @@ const CategoryList = () => {
                   src={`https://dashboard.trungthanhzone.com${imageUrl}`}
                   alt={category.name}
                 />
-                <Link to={`${category.slug}`}>
+                <Link to={`/categories/${category.slug}`}>
                   <span className='text-xs md:text-sm lg:text-sm xl:text-sm hover:text-[#fe5c17] underline'>
                     {category.name}
                   </span>

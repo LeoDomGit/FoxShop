@@ -23,6 +23,38 @@ function Checkout() {
   const carts = useSelector((store) => store.cart.items);
   const dispatch = useDispatch(); // Declare dispatch
 
+  const [vouchers, setVouchers] = useState([]);
+  const [selectedVoucher, setSelectedVoucher] = useState(null);
+  const [discountAmount, setDiscountAmount] = useState(0);
+
+  useEffect(() => {
+    async function fetchVouchers() {
+      const userId = localStorage.getItem('userId');
+      const response = await axios.post('/voucher', { userid: userId });
+      setVouchers(response.data.data);
+    }
+    fetchVouchers();
+  }, []);
+
+  const applyVoucher = async (voucherCode) => {
+    try {
+      const response = await axios.post('/voucher/validate-voucher', {
+        voucher_code: voucherCode,
+        total_amount: totalPrice,
+      });
+
+      if (response.data.check) {
+        setSelectedVoucher(voucherCode);
+        setDiscountAmount(response.data.discount);
+        toast.success(`Đã áp dụng voucher ${voucherCode} cho đơn hàng`);
+      } else {
+        toast.error(response.data.msg);
+      }
+    } catch (error) {
+      toast.error('Không thể áp dụng voucher. Vui lòng thử lại.');
+    }
+  };
+
   useEffect(() => {
     fetch(
       'https://raw.githubusercontent.com/qtv100291/Vietnam-administrative-division-json-server/refs/heads/master/db.json'
@@ -109,16 +141,27 @@ function Checkout() {
 
     try {
       const userId = localStorage.getItem('userId');
+      const toastId = toast.loading('Đang xử lý đơn hàng của bạn...');
+
       if (paymentMethod === 'cash') {
+        const totalAmountAfterDiscount = totalPrice - discountAmount;
+
         const response = await axios.post('/orders', {
           ...form,
           id_user: userId,
-          total_amount: totalPrice,
-          order_details: orderDetails,
           id_payment: 1,
+          total_amount: totalAmountAfterDiscount,
+          voucher_code: selectedVoucher,
+          order_details: orderDetails,
           address: fullAddress,
         });
-        toast.success('Đặt hàng thành công!');
+
+        toast.update(toastId, {
+          render: 'Đặt hàng thành công!',
+          type: 'success',
+          isLoading: false,
+          autoClose: 3000, // Đóng sau 3 giây
+        });
         console.log('Order saved successfully:', response.data);
         dispatch(clearCart());
       } else if (paymentMethod === 'card') {
@@ -130,21 +173,78 @@ function Checkout() {
           order_details: orderDetails,
           address: fullAddress,
         });
-        console.log('Payment successful:', response.data);
+
         if (response.data.url) {
+          toast.dismiss(toastId);
           window.location.href = response.data.url;
         } else {
-          toast.error('Lỗi khi thanh toán qua thẻ');
+          toast.update(toastId, {
+            render: 'Lỗi khi thanh toán qua thẻ.',
+            type: 'error',
+            isLoading: false,
+            autoClose: 3000,
+          });
         }
       }
     } catch (error) {
       console.error('Error processing checkout:', error);
-      toast.error('Đặt hàng thất bại. Vui lòng thử lại.');
+      const toastId = toast.loading('');
+      toast.update(toastId, {
+        render: 'Đặt hàng thất bại. Vui lòng thử lại.',
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000,
+      });
     }
   };
 
   return (
     <div className=''>
+      <div className='vouchers mb-4 bg-white p-4 shadow-md rounded-md'>
+        <h4 className='text-lg font-semibold mb-2'>Mã giảm giá</h4>
+        <ul>
+          {vouchers.map((voucher) => (
+            <li
+              key={voucher.id}
+              className='flex items-center justify-between p-2 border mb-2 rounded-lg'
+            >
+              <div>
+                <p className='text-sm font-semibold text-[#fe5c17]'>
+                  {voucher.code}
+                </p>
+                <p className='text-xs text-gray-500'>
+                  {voucher.discount_type === 'percentage'
+                    ? `Giảm ${voucher.discount_value}%`
+                    : `Giảm ${voucher.discount_value.toLocaleString(
+                        'vi-VN'
+                      )} VND`}
+                  {` (Đơn tối thiểu: ${voucher.minimum_monney.toLocaleString(
+                    'vi-VN'
+                  )} VND)`}
+                </p>
+              </div>
+              {voucher.usage_limit > 0 &&
+              new Date(voucher.end_date) > new Date() &&
+              totalPrice >= voucher.minimum_monney ? (
+                <button
+                  className='bg-[#fe5c17] shadow-md text-white text-xs px-4 py-1 rounded-md'
+                  onClick={() => applyVoucher(voucher.code)}
+                >
+                  Áp dụng
+                </button>
+              ) : (
+                <button
+                  className='bg-gray-400 shadow-md text-white text-xs px-4 py-1 rounded-md'
+                  disabled
+                >
+                  Không khả dụng
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <div className=' bg-white rounded-lg shadow-md p-4'>
         <h4 className='text-lg font-semibold mb-6'>Thông tin thanh toán</h4>
 
@@ -266,8 +366,14 @@ function Checkout() {
         <div className='mb-4'>
           <span className='text-sm font-semibold'>Tổng tiền:</span>
           <span className='text-sm font-bold text-[#fe5117] ml-2'>
-            {totalPrice.toLocaleString()} VND
+            {(totalPrice - discountAmount).toLocaleString('vi-VN')} VND
           </span>
+          {selectedVoucher && (
+            <p className='text-xs text-gray-500'>
+              Đã áp dụng mã {selectedVoucher} (-
+              {discountAmount.toLocaleString('vi-VN')} VND)
+            </p>
+          )}
         </div>
 
         {/* Nút thanh toán */}

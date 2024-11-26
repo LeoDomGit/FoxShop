@@ -208,14 +208,23 @@ function Comment({ productId }) {
         {comments.length > 0 ? (
           comments.map((comment, index) => (
             <div key={index} className='border p-4 shadow-sm'>
-              <div className='flex items-center justify-between'>
-                <h3 className='font-semibold text-base'>
-                  {comment.userName || 'Ẩn danh'}{' '}
-                  {formatDate(comment.created_at)}
-                </h3>
-                <div className='flex space-x-1 text-yellow-500'>
+              <div className=''>
+                <div className='text-base flex gap-3 items-center'>
+                  <span className='font-semibold '>
+                    {comment.userName || 'Ẩn danh'}
+                  </span>
+                  <span className=''>{`(${formatDate(
+                    comment.created_at
+                  )})`}</span>
+                </div>
+                <div className='flex mt-2 items-center'>
+                  <span className='text-[16px] font-medium'>
+                    Đánh giá sản phẩm:
+                  </span>
                   {[...Array(comment.rating)].map((_, i) => (
-                    <span key={i}>★</span>
+                    <span className='text-yellow-400 text-[20px]' key={i}>
+                      ★
+                    </span>
                   ))}
                 </div>
               </div>

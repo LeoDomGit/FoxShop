@@ -4,16 +4,18 @@ import VietNam from '../assets/image/VietNam.png';
 import England from '../assets/image/England.png';
 import Navbar from '../components/Navbar';
 import Search from '../components/Search';
+import React, { useState, useContext } from 'react'; // Thêm useContext vào đây
+
 import { Link, useNavigate } from 'react-router-dom';
 import { CiMenuBurger } from 'react-icons/ci';
 import { IoIosHeartEmpty } from 'react-icons/io';
 import { HiOutlineShoppingCart } from 'react-icons/hi2';
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { clearCartLogout } from '../stores/cart';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+
+import { fetchAllProducts } from '../services/productService';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

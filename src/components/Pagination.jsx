@@ -29,7 +29,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         return (
           <button
             key={page}
-            className={`px-2 py-2 ${
+            className={`px-4 py-2 ${
               currentPage === page
                 ? 'bg-[#fe5c17] text-white'
                 : 'bg-gray-100 hover:bg-gray-200'

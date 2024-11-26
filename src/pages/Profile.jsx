@@ -6,6 +6,7 @@ import axios from '../api/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from '../components/Modal';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,8 @@ function Profile() {
     newPassword: '',
     newPasswordConfirmation: '', // Sử dụng snake_case để đồng bộ với Laravel
   });
+
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
@@ -97,10 +100,12 @@ function Profile() {
     if (formData.name !== localStorage.getItem('name')) {
       formDataToSend.append('name', formData.name);
       hasChanges = true;
+      navigate('/');
     }
     if (formData.phone !== localStorage.getItem('phone')) {
       formDataToSend.append('phone', formData.phone);
       hasChanges = true;
+      navigate('/');
     }
     if (
       formData.currentPassword &&

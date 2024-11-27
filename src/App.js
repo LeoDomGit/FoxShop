@@ -1,13 +1,11 @@
-/* eslint-disable */
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Profiler, useEffect } from 'react';
+import { useEffect } from 'react';
 import HomePage from './pages/Homepage';
 import ProductPage from './pages/ProductPage';
 import ProductDetail from './pages/ProductDetail';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Forgot from './pages/Forgot';
-import RecoverPassword from './pages/RecoverPassword';
 import Cart from './pages/Cart';
 import Post from './pages/Post';
 import BlogDetail from './pages/BlogDetail';
@@ -61,10 +59,6 @@ function App() {
           <Route path='/search' element={<SearchPage />} />
           <Route path='/orders' element={<Orders />} />
 
-          <Route
-            path='/recover-password/:token/:email'
-            element={<RecoverPassword />}
-          />
           {/* Blog chi tiết */}
           <Route path='/post/:slug' element={<BlogDetail />} />
           {/* Trang giới thiệu */}

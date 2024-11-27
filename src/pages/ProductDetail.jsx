@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Carousel from '../components/Carousel';
-import { CiHeart } from 'react-icons/ci';
 import { GoPlus } from 'react-icons/go';
-import { FiMinus } from 'react-icons/fi';
+import { FiMinus, FiShare2 } from 'react-icons/fi';
 import Slider from '../components/Slider'; // Import Slider
 import Comment from '../components/Comment';
 import Footer from '../components/Footer';
@@ -241,7 +240,7 @@ function ProductDetail() {
                 Thêm vào giỏ
               </button>
               <button className='py-3 px-5 border-[#fe5c17] border-[1px] text-[#fe5c17] hover:bg-[#fe5517] hover:text-white shadow-sm'>
-                <CiHeart className='text-[18px]' />
+                <FiShare2 className='text-[18px]' />
               </button>
             </div>
           </div>

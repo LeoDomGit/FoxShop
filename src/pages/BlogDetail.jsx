@@ -11,10 +11,6 @@ function BlogDetail() {
   const [loading, setLoading] = useState(true); // State theo dõi trạng thái tải
 
   useEffect(() => {
-    document.title = { slug };
-  }, []);
-
-  useEffect(() => {
     const fetchPost = async () => {
       try {
         const response = await axios.get(`/post/${slug}`);
@@ -28,6 +24,10 @@ function BlogDetail() {
 
     fetchPost();
   }, [slug]);
+
+  useEffect(() => {
+    document.title = post ? post.title : 'Tên sản phẩm';
+  }, [post]);
 
   if (loading) {
     return <div>Loading...</div>;

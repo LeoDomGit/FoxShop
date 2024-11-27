@@ -24,14 +24,24 @@ export async function fetchAllProducts() {
   }
 }
 
-// Search function
-export async function searchProducts(query) {
+// Lấy danh mục sản phẩm
+export async function fetchCategories() {
   try {
-    // Ensure query is correctly sent
-    const response = await axios.get(`/products/search?q=${query}`);
-    return response.data.data || [];
+    const response = await axios.get('/categories');
+    return response.data;
   } catch (error) {
-    console.error('Error fetching search results:', error);
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+}
+
+// Lấy thuộc tính sản phẩm (màu sắc, kích thước, v.v.)
+export async function fetchAttributes() {
+  try {
+    const response = await axios.get('/attributes');
+    return response.data.attributes;
+  } catch (error) {
+    console.error('Error fetching attributes:', error);
     return [];
   }
 }

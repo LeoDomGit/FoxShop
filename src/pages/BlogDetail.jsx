@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
@@ -13,8 +14,8 @@ function BlogDetail() {
     const fetchPost = async () => {
       try {
         const response = await axios.get(`/post/${slug}`);
-        setPost(response.data); // Cập nhật dữ liệu bài viết
-        setLoading(false); // Dữ liệu đã được tải xong
+        setPost(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching post:', error);
         setLoading(false);
@@ -23,6 +24,10 @@ function BlogDetail() {
 
     fetchPost();
   }, [slug]);
+
+  useEffect(() => {
+    document.title = post ? post.title : 'Tên sản phẩm';
+  }, [post]);
 
   if (loading) {
     return <div>Loading...</div>;

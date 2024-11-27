@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -5,7 +6,11 @@ import Filter from '../components/Filter';
 import ProductItem from '../components/ProductItem';
 import Pagination from '../components/Pagination';
 import { CiFilter } from 'react-icons/ci';
-import axios from '../api/axios';
+import {
+  fetchAllProducts,
+  fetchCategories,
+  fetchAttributes,
+} from '../services/productService'; // Import services
 
 function ProductPage() {
   useEffect(() => {
@@ -13,37 +18,85 @@ function ProductPage() {
   }, []);
 
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [attributes, setAttributes] = useState({ colors: [], sizes: [] });
+  const [filters, setFilters] = useState({
+    category: null,
+    colors: [],
+    sizes: [],
+    minPrice: 50000,
+    maxPrice: 5000000,
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
+  // Fetch data for categories, attributes, and products
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(`/products?page=${currentPage}`);
-        let fetchedProducts = response.data.data;
+        // Fetch categories
+        const categoriesData = await fetchCategories();
+        setCategories(categoriesData);
 
-        fetchedProducts.sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        );
+        // Fetch product attributes (colors, sizes)
+        const attributesData = await fetchAttributes();
+        const colors = attributesData.filter((attr) => attr.type === 'color');
+        const sizes = attributesData.filter((attr) => attr.type === 'size');
+        setAttributes({ colors, sizes });
 
-        setProducts(fetchedProducts);
-        setTotalPages(response.data.last_page);
+        // Fetch products with filters
+        await applyFilters(filters);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchProducts();
-  }, [currentPage]);
+    fetchData();
+  }, []);
 
-  const toggleFilter = () => {
-    setIsFilterVisible(!isFilterVisible);
+  // Fetch products with filters applied
+  const applyFilters = async (filters) => {
+    try {
+      const allProducts = await fetchAllProducts();
+
+      const filteredProducts = allProducts.filter((product) => {
+        const matchesCategory =
+          !filters.category || product.category_id === filters.category;
+        const matchesColor =
+          filters.colors.length === 0 ||
+          (product.colors &&
+            product.colors.some((color) => filters.colors.includes(color))); // Kiểm tra nếu product.colors không undefined
+        const matchesSize =
+          filters.sizes.length === 0 ||
+          (product.sizes &&
+            product.sizes.some((size) => filters.sizes.includes(size))); // Kiểm tra nếu product.sizes không undefined
+        const matchesPrice =
+          product.price >= filters.minPrice &&
+          product.price <= filters.maxPrice;
+
+        return matchesCategory && matchesColor && matchesSize && matchesPrice;
+      });
+
+      setProducts(filteredProducts);
+      setTotalPages(Math.ceil(filteredProducts.length / 10)); // Assuming 10 products per page
+    } catch (error) {
+      console.error('Error fetching filtered products:', error);
+    }
   };
 
-  const closeFilter = () => {
-    setIsFilterVisible(false);
+  // Handle filter change
+  const handleFilterChange = async (newFilters) => {
+    setFilters((prevFilters) => {
+      const updatedFilters = { ...prevFilters, ...newFilters };
+      applyFilters(updatedFilters); // Apply new filters
+      return updatedFilters;
+    });
   };
+
+  const toggleFilter = () => setIsFilterVisible(!isFilterVisible);
+
+  const closeFilter = () => setIsFilterVisible(false);
 
   return (
     <div className='flex flex-col min-h-screen'>
@@ -66,6 +119,7 @@ function ProductPage() {
               <ProductItem key={product.id} product={product} />
             ))}
           </div>
+
           {products.length > 0 && (
             <Pagination
               currentPage={currentPage}
@@ -85,7 +139,21 @@ function ProductPage() {
             className='bg-white w-4/5 max-w-xs h-full transform transition-transform duration-300 translate-x-0'
             onClick={(e) => e.stopPropagation()}
           >
-            <Filter />
+            <Filter
+              categories={categories}
+              attributes={attributes}
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onClearFilters={() =>
+                setFilters({
+                  category: null,
+                  colors: [],
+                  sizes: [],
+                  minPrice: 50000,
+                  maxPrice: 5000000,
+                })
+              }
+            />
           </div>
         </div>
       )}

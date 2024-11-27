@@ -1,39 +1,34 @@
-// src/components/Filter.js
 import React from 'react';
 
 function Filter({
   categories,
-  attributes,
+  brands,
   filters,
   onFilterChange,
   onClearFilters,
 }) {
+  const handleBrandChange = (e) => {
+    const brandId = e.target.value ? parseInt(e.target.value, 10) : null;
+    onFilterChange({ brand: brandId });
+  };
+
   const handleCategoryChange = (e) => {
-    onFilterChange({ category: parseInt(e.target.value, 10) });
+    const categoryId = e.target.value ? parseInt(e.target.value, 10) : null;
+    onFilterChange({ category: categoryId });
   };
 
-  const handleColorChange = (color) => {
-    const updatedColors = filters.colors.includes(color)
-      ? filters.colors.filter((c) => c !== color)
-      : [...filters.colors, color];
-    onFilterChange({ colors: updatedColors });
-  };
-
-  const handleSizeChange = (size) => {
-    const updatedSizes = filters.sizes.includes(size)
-      ? filters.sizes.filter((s) => s !== size)
-      : [...filters.sizes, size];
-    onFilterChange({ sizes: updatedSizes });
-  };
-
-  const handlePriceChange = (min, max) => {
-    onFilterChange({ minPrice: min, maxPrice: max });
+  const handlePriceChange = (field, value) => {
+    const numericValue = parseInt(value, 10) || 0;
+    const updatedPrice = { ...filters };
+    updatedPrice[field] = numericValue;
+    onFilterChange(updatedPrice);
   };
 
   return (
     <div className='p-4'>
       <h2 className='font-bold text-lg mb-4'>Bộ lọc sản phẩm</h2>
 
+      {/* Filter by category */}
       <div className='mb-4'>
         <label className='block font-semibold mb-2'>Danh mục:</label>
         <select
@@ -42,67 +37,51 @@ function Filter({
           onChange={handleCategoryChange}
         >
           <option value=''>Tất cả</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
             </option>
           ))}
         </select>
       </div>
 
+      {/* Filter by brand */}
       <div className='mb-4'>
-        <label className='block font-semibold mb-2'>Màu sắc:</label>
-        <div>
-          {attributes.colors.map((color) => (
-            <label key={color.id} className='mr-2'>
-              <input
-                type='checkbox'
-                checked={filters.colors.includes(color.id)}
-                onChange={() => handleColorChange(color.id)}
-              />
-              {color.name}
-            </label>
+        <label className='block font-semibold mb-2'>Thương hiệu:</label>
+        <select
+          className='border border-gray-300 p-2 w-full focus:outline-none rounded-md'
+          value={filters.brand || ''}
+          onChange={handleBrandChange}
+        >
+          <option value=''>Tất cả</option>
+          {brands.map((brand) => (
+            <option key={brand.id} value={brand.id}>
+              {brand.name}
+            </option>
           ))}
-        </div>
+        </select>
       </div>
 
-      <div className='mb-4'>
-        <label className='block font-semibold mb-2'>Kích thước:</label>
-        <div>
-          {attributes.sizes.map((size) => (
-            <label key={size.id} className='mr-2'>
-              <input
-                type='checkbox'
-                checked={filters.sizes.includes(size.id)}
-                onChange={() => handleSizeChange(size.id)}
-              />
-              {size.name}
-            </label>
-          ))}
-        </div>
-      </div>
-
+      {/* Filter by price */}
       <div className='mb-4'>
         <label className='block font-semibold mb-2'>Giá:</label>
         <input
           type='number'
-          className='border border-gray-300 p-2 w-full focus:outline-none rounded-md'
-          placeholder='Giá từ'
+          className='border border-gray-300 p-2 w-full focus:outline-none rounded-md mb-2'
           value={filters.minPrice}
-          onChange={(e) => handlePriceChange(e.target.value, filters.maxPrice)}
+          onChange={(e) => handlePriceChange('minPrice', e.target.value)}
         />
         <input
           type='number'
-          className='border border-gray-300 p-2 w-full focus:outline-none rounded-md mt-2'
-          placeholder='Giá đến'
+          className='border border-gray-300 p-2 w-full focus:outline-none rounded-md'
           value={filters.maxPrice}
-          onChange={(e) => handlePriceChange(filters.minPrice, e.target.value)}
+          onChange={(e) => handlePriceChange('maxPrice', e.target.value)}
         />
       </div>
 
       <button
+        className='w-full bg-blue-500 text-white p-2 rounded-md'
         onClick={onClearFilters}
-        className='bg-gray-300 p-2 rounded-md w-full mt-4'
       >
         Xóa bộ lọc
       </button>

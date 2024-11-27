@@ -24,6 +24,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchPage from './pages/SearchPage';
 import Orders from './pages/Orders';
+import ProductPageByCategory from './pages/ProductByCatePage';
 
 function App() {
   const dispatch = useDispatch();
@@ -43,6 +44,11 @@ function App() {
           <Route path='/post' element={<Post />} />
           {/* Route chi tiết sản phẩm */}
           <Route path='/products/:slug' element={<ProductDetail />} />
+
+          <Route
+            path='/categories/:categorySlug'
+            element={<ProductPageByCategory />}
+          />
           {/* Route trang Giỏ hàng */}
           <Route path='/cart' element={<Cart />} />
           {/* Route trang Đăng nhập */}

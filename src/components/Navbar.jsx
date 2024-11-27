@@ -11,9 +11,6 @@ function Navbar({ ulClass = '', liClass = '' }) {
         <Link to='/post'>Bài viết</Link>
       </li>
       <li className={liClass}>
-        <Link to='#'>Liên hệ</Link>
-      </li>
-      <li className={liClass}>
         <Link to='/products'>Sản phẩm</Link>
       </li>
 

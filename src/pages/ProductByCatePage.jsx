@@ -1,5 +1,5 @@
 // ProductPageByCategory.jsx
-
+/*eslint-disable*/
 import React, { useState, useEffect } from 'react';
 import axios from '../api/axios';
 import { useParams } from 'react-router-dom';

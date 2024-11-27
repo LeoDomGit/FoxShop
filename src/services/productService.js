@@ -1,7 +1,6 @@
-// src/services/productService.js
 import axios from '../api/axios';
 
-export async function fetchAllProducts() {
+export async function fetchAllProducts(filters) {
   try {
     const response = await axios.get('/products');
     const totalPages = response.data.last_page;
@@ -16,15 +15,26 @@ export async function fetchAllProducts() {
     responses.forEach((res) => {
       allProducts = allProducts.concat(res.data.data);
     });
-
-    return allProducts;
+    return applyFilters(allProducts, filters);
   } catch (error) {
     console.error('Error fetching all products:', error);
     return [];
   }
 }
 
-// Lấy danh mục sản phẩm
+function applyFilters(products, filters) {
+  return products.filter((product) => {
+    const matchesCategory =
+      !filters.category || product.id_category === filters.category;
+
+    const matchesBrand = !filters.brand || product.id_brand === filters.brand;
+
+    const matchesPrice =
+      product.price >= filters.minPrice && product.price <= filters.maxPrice;
+
+    return matchesCategory && matchesBrand && matchesPrice;
+  });
+}
 export async function fetchCategories() {
   try {
     const response = await axios.get('/categories');
@@ -35,13 +45,12 @@ export async function fetchCategories() {
   }
 }
 
-// Lấy thuộc tính sản phẩm (màu sắc, kích thước, v.v.)
-export async function fetchAttributes() {
+export async function fetchBrands() {
   try {
-    const response = await axios.get('/attributes');
-    return response.data.attributes;
+    const response = await axios.get('/brands');
+    return response.data;
   } catch (error) {
-    console.error('Error fetching attributes:', error);
+    console.error('Error fetching brands:', error);
     return [];
   }
 }

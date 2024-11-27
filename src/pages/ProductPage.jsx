@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -9,8 +8,8 @@ import { CiFilter } from 'react-icons/ci';
 import {
   fetchAllProducts,
   fetchCategories,
-  fetchAttributes,
-} from '../services/productService'; // Import services
+  fetchBrands,
+} from '../services/productService';
 
 function ProductPage() {
   useEffect(() => {
@@ -19,11 +18,10 @@ function ProductPage() {
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [attributes, setAttributes] = useState({ colors: [], sizes: [] });
+  const [brands, setBrands] = useState([]);
   const [filters, setFilters] = useState({
     category: null,
-    colors: [],
-    sizes: [],
+    brand: null,
     minPrice: 50000,
     maxPrice: 5000000,
   });
@@ -31,71 +29,34 @@ function ProductPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
-  // Fetch data for categories, attributes, and products
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch categories
         const categoriesData = await fetchCategories();
+        const brandsData = await fetchBrands();
+
         setCategories(categoriesData);
+        setBrands(brandsData);
 
-        // Fetch product attributes (colors, sizes)
-        const attributesData = await fetchAttributes();
-        const colors = attributesData.filter((attr) => attr.type === 'color');
-        const sizes = attributesData.filter((attr) => attr.type === 'size');
-        setAttributes({ colors, sizes });
-
-        // Fetch products with filters
-        await applyFilters(filters);
+        const productsData = await fetchAllProducts(filters);
+        setProducts(productsData);
+        setTotalPages(Math.ceil(productsData.length / 16));
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [filters]); // Re-fetch when filters change
 
-  // Fetch products with filters applied
-  const applyFilters = async (filters) => {
-    try {
-      const allProducts = await fetchAllProducts();
-
-      const filteredProducts = allProducts.filter((product) => {
-        const matchesCategory =
-          !filters.category || product.category_id === filters.category;
-        const matchesColor =
-          filters.colors.length === 0 ||
-          (product.colors &&
-            product.colors.some((color) => filters.colors.includes(color))); // Kiểm tra nếu product.colors không undefined
-        const matchesSize =
-          filters.sizes.length === 0 ||
-          (product.sizes &&
-            product.sizes.some((size) => filters.sizes.includes(size))); // Kiểm tra nếu product.sizes không undefined
-        const matchesPrice =
-          product.price >= filters.minPrice &&
-          product.price <= filters.maxPrice;
-
-        return matchesCategory && matchesColor && matchesSize && matchesPrice;
-      });
-
-      setProducts(filteredProducts);
-      setTotalPages(Math.ceil(filteredProducts.length / 10)); // Assuming 10 products per page
-    } catch (error) {
-      console.error('Error fetching filtered products:', error);
-    }
-  };
-
-  // Handle filter change
-  const handleFilterChange = async (newFilters) => {
+  const handleFilterChange = (newFilters) => {
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters, ...newFilters };
-      applyFilters(updatedFilters); // Apply new filters
       return updatedFilters;
     });
   };
 
   const toggleFilter = () => setIsFilterVisible(!isFilterVisible);
-
   const closeFilter = () => setIsFilterVisible(false);
 
   return (
@@ -141,14 +102,13 @@ function ProductPage() {
           >
             <Filter
               categories={categories}
-              attributes={attributes}
+              brands={brands}
               filters={filters}
               onFilterChange={handleFilterChange}
               onClearFilters={() =>
                 setFilters({
                   category: null,
-                  colors: [],
-                  sizes: [],
+                  brand: null,
                   minPrice: 50000,
                   maxPrice: 5000000,
                 })

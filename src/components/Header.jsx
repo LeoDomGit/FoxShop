@@ -15,8 +15,6 @@ import { clearCartLogout } from '../stores/cart';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { fetchAllProducts } from '../services/productService';
-
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [language, setLanguage] = useState('vi');

@@ -1,13 +1,9 @@
-// HomePage.jsx
-
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Banner from '../components/Banner';
 import CategoryList from '../components/CategoryList';
-import Sale from '../components/Sale';
 import Slider from '../components/Slider';
 import Title from '../components/Title';
-import LookBook from '../components/LookBook';
 import SliderImage from '../components/SliderImage';
 import Footer from '../components/Footer';
 import ProductItem from '../components/ProductItem';
@@ -21,8 +17,8 @@ function HomePage() {
   useEffect(() => {
     document.title = 'Trang chủ';
   }, []);
-  // GET ALL PR
 
+  // GET ALL PR
   const [products, setProducts] = useState([]);
   useEffect(() => {
     const fetchProducts = async () => {
@@ -38,8 +34,8 @@ function HomePage() {
   }, []);
 
   // GET POLO
-
   const [polo, setPolo] = useState([]);
+  const [bestSeller, setBestSeller] = useState([]);
   const [randomPolo, setRandomPolo] = useState([]);
 
   // GET RANDOM
@@ -58,6 +54,20 @@ function HomePage() {
       }
     };
     fetchPolo();
+  }, []);
+
+  useEffect(() => {
+    const fetchBestSeller = async () => {
+      try {
+        const response = await axios.get('/products/best');
+        setBestSeller(
+          Array.isArray(response.data.data) ? response.data.data : []
+        );
+      } catch (err) {
+        console.error('Error', err);
+      }
+    };
+    fetchBestSeller();
   }, []);
 
   useEffect(() => {
@@ -86,8 +96,6 @@ function HomePage() {
         </div>
       </div>
 
-      <Sale />
-
       <div>
         <Title
           title='Sản phẩm mới'
@@ -108,8 +116,24 @@ function HomePage() {
           ))}
         </div>
       </div>
-      <Title title='Bộ Sưu Tập Ảnh Lookbook' />
-      <LookBook />
+
+      <Title
+        title='Sản phẩm bán chạy nhất'
+        content='"Sang trọng từng chi tiết, mạnh mẽ trong phong cách"'
+        linkTo='/products'
+      />
+      <div className='container mx-auto lg:px-5 xl:px-24 md:px-4  px-5 mb-2 mt-2 xl:mt-5 lg:mt-12  md:mt-12 xl:mb-5  lg:mb-5  md:mb-5'>
+        <div className='grid grid-cols-2 md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-8 xl:gap-12 justify-between'>
+          {Array.isArray(bestSeller) && bestSeller.length > 0 ? (
+            bestSeller.map((item) => (
+              <ProductItem key={item.id} product={item} />
+            ))
+          ) : (
+            <p>Không có sản phẩm bán chạy nhất</p>
+          )}
+        </div>
+      </div>
+
       <Title
         title='Dành cho bạn'
         content='Khám phá những dòng sản phẩm phù hợp với bản thân bạn!'

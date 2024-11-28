@@ -61,7 +61,7 @@ const CategoryList = () => {
               >
                 <img
                   className='w-full h-[140px] md:h-[150px] sm:h-[150px] min-h-[150px] lg:h-[220px] xl:[220px] object-cover'
-                  src={`https://dashboard.trungthanhzone.com${imageUrl}`}
+                  src={`https://dashboard.foxshop.one${imageUrl}`}
                   alt={category.name}
                 />
                 <Link to={`/categories/${category.slug}`}>

@@ -136,9 +136,14 @@ function Login() {
 
         {/* Hoặc đăng nhập với Google */}
         <div className='mt-4 flex justify-center'>
-          <button className='flex items-center bg-red-500 text-white px-4 py-2 rounded-md text-[14px] hover:bg-red-600 w-full justify-center'>
-            <FaGoogle className='mr-2' />
-            Đăng nhập với Google
+          <button className=' bg-red-500 text-white px-4 py-2 rounded-md text-[14px] hover:bg-red-600 w-full '>
+            <Link
+              className='flex items-center justify-center'
+              to='http://localhost:8000/auth/google/redirect'
+            >
+              <FaGoogle className='mr-2' />
+              Đăng nhập với Google
+            </Link>
           </button>
         </div>
 

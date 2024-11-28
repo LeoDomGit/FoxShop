@@ -54,7 +54,7 @@ function BlogDetail() {
         <div className='mb-6'>
           <img
             className='w-full h-[350px] sm:h-[400px] lg:h-[450px] object-cover'
-            src={`https://dashboard.trungthanhzone.com${post.image}`}
+            src={`https://dashboard.foxshop.one${post.image}`}
             alt={post.title}
           />
         </div>

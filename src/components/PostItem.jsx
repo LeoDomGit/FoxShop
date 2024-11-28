@@ -7,7 +7,7 @@ function PostItem({ post }) {
       <div className='flex flex-col gap-3'>
         <Link to={`/post/${post.slug}`}>
           <img
-            src={`https://dashboard.trungthanhzone.com${post.image}`}
+            src={`https://dashboard.foxshop.one${post.image}`}
             alt={post.title}
             className='w-full h-[260px] object-cover line-clamp-1 '
           />

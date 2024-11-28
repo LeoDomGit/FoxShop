@@ -6,7 +6,9 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { changeQuantity, removeFromCart } from '../stores/cart';
 import { toast } from 'react-toastify';
-import { fetchAllProducts } from '../services/productService'; // Import the function here
+// import { fetchAllProducts } from '../services/productService';
+
+import axios from '../api/axios';
 
 const urlImage = process.env.REACT_APP_URL_IMAGE;
 
@@ -18,10 +20,34 @@ function CartItem(props) {
   const [detail, setDetail] = useState({});
   const dispatch = useDispatch();
 
+  async function fetchAllProducts() {
+    try {
+      const response = await axios.get('/products');
+      const totalPages = response.data.last_page;
+      let allProducts = response.data.data;
+
+      const requests = [];
+      for (let page = 2; page <= totalPages; page++) {
+        requests.push(axios.get(`${'/products'}?page=${page}`));
+      }
+
+      const responses = await Promise.all(requests);
+      responses.forEach((res) => {
+        allProducts = allProducts.concat(res.data.data);
+      });
+
+      return allProducts;
+    } catch (error) {
+      console.error('Error fetching all products:', error);
+      return [];
+    }
+  }
+
   useEffect(() => {
     const getProductDetails = async () => {
+      // Chỉ gọi API nếu cache chưa có
       if (!productCache) {
-        productCache = await fetchAllProducts(); // Call the imported function
+        productCache = await fetchAllProducts();
       }
 
       const findDetail = productCache.find(

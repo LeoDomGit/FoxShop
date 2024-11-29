@@ -80,7 +80,7 @@ function SearchPage() {
       <Header />
       <main className='flex-grow'>
         <div className='container mx-auto lg:px-5 xl:px-24 md:px-4 px-5 mb-2 mt-[100px] xl:mb-5 lg:mb-5 md:mb-5'>
-          <div className='font-semibold mb-4'>
+          <div className='font-semibold text-[20px] my-4'>
             Kết quả tìm kiếm cho: "{searchQuery}"
           </div>
 

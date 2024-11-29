@@ -82,7 +82,7 @@ function Cart() {
                 <div className='flex justify-between items-center mb-5'>
                   <button
                     onClick={handleClearAll}
-                    className='text-[14px] hover:text-red-600'
+                    className='text-[1rem] hover:text-red-600'
                   >
                     Xóa tất cả ({carts.length})
                   </button>

@@ -37,7 +37,7 @@ function HomePage() {
   const [polo, setPolo] = useState([]);
   const [bestSeller, setBestSeller] = useState([]);
   const [randomPolo, setRandomPolo] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   // GET RANDOM
   const getRandomProducts = (products, count) => {
     const shuffled = products.sort(() => 0.5 - Math.random());
@@ -60,13 +60,21 @@ function HomePage() {
     const fetchBestSeller = async () => {
       try {
         const response = await axios.get('/products/best');
-        setBestSeller(
-          Array.isArray(response.data.data) ? response.data.data : []
-        );
+
+        // Kiểm tra xem dữ liệu có đúng định dạng không, sau đó cập nhật state
+        if (response.data && response.data.data) {
+          setBestSeller(response.data.data);
+        } else {
+          setBestSeller([]);
+        }
       } catch (err) {
-        console.error('Error', err);
+        console.error('Error fetching best sellers:', err);
+        setBestSeller([]);
+      } finally {
+        setLoading(false); // Set loading false sau khi fetch xong
       }
     };
+
     fetchBestSeller();
   }, []);
 
@@ -79,7 +87,9 @@ function HomePage() {
 
   const filteredProducts = products.filter((product) => product.discount > 15);
   const shuffledProducts = randomProduct(filteredProducts);
-
+  if (loading) {
+    return <p>Đang tải...</p>;
+  }
   return (
     <div>
       <Header />
@@ -124,13 +134,9 @@ function HomePage() {
       />
       <div className='container mx-auto lg:px-5 xl:px-24 md:px-4  px-5 mb-2 mt-2 xl:mt-5 lg:mt-12  md:mt-12 xl:mb-5  lg:mb-5  md:mb-5'>
         <div className='grid grid-cols-2 md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-8 xl:gap-12 justify-between'>
-          {Array.isArray(bestSeller) && bestSeller.length > 0 ? (
-            bestSeller.map((item) => (
-              <ProductItem key={item.id} product={item} />
-            ))
-          ) : (
-            <p>Không có sản phẩm bán chạy nhất</p>
-          )}
+          {bestSeller.map((item) => (
+            <ProductItem key={item.id} product={item} />
+          ))}
         </div>
       </div>
 

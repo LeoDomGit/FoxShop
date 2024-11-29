@@ -1,7 +1,4 @@
-/*eslint-disable*/
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { IoIosArrowForward } from 'react-icons/io';
 function Title({ title = '', content = '', linkTo = '' }) {
   return (
     <>
@@ -9,7 +6,7 @@ function Title({ title = '', content = '', linkTo = '' }) {
         <span className='sm:text-base md:text-xl lg:text-xl xl:text-xl font-medium uppercase text-[#262626]'>
           {title}
         </span>
-        <span className='text-[#262626]'>{content}</span>
+        <span className='text-[1rem]'>{content}</span>
       </div>
     </>
   );

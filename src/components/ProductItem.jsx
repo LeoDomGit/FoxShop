@@ -25,7 +25,7 @@ function ProductItem({ product }) {
         </div>
 
         <div className='flex justify-between pt-2'>
-          <span className='line-clamp-2 text-sm font-medium h-[42px]'>
+          <span className='line-clamp-2 text-[1rem] font-medium h-[46x]'>
             {product.name}
           </span>
         </div>

@@ -65,7 +65,7 @@ const CategoryList = () => {
                   alt={category.name}
                 />
                 <Link to={`/categories/${category.slug}`}>
-                  <span className='text-xs md:text-sm lg:text-sm xl:text-sm hover:text-[#fe5c17] underline'>
+                  <span className='text-xs md:text-sm lg:text-sm xl:text-sm font-medium hover:text-[#fe5c17] underline'>
                     {category.name}
                   </span>
                 </Link>

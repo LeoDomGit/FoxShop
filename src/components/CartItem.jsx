@@ -94,11 +94,11 @@ function CartItem(props) {
 
   return (
     <div>
-      <div className='border-b border-gray-200 pb-2'>
+      <div className='border-b border-gray-200 pb-4'>
         <div className='flex items-center mt-3'>
           {detail.image && (
             <img
-              className='w-32 h-32 object-cover rounded'
+              className='w-40 h-40 object-cover rounded'
               src={`${urlImage}${detail.image}`}
               alt={detail.name}
             />
@@ -107,11 +107,11 @@ function CartItem(props) {
             <div className='ml-2'>
               <div>
                 <Link to={`/products/${detail.slug}`}>
-                  <div className='text-[16px] font-medium hover:text-[#fe5c17]'>
+                  <div className='text-[1rem] font-medium hover:text-[#fe5c17] mb-2'>
                     {detail.name}
                   </div>
                 </Link>
-                <div className='flex items-center gap-3'>
+                <div className='flex items-center gap-3 font-medium text-[1rem] mb-2'>
                   <span className='text-gray-600'>Giá: </span>
                   <span className='text-[#fe5c17]'>
                     {`${Number(detail.price).toLocaleString('vi-VN')}đ`}
@@ -119,35 +119,37 @@ function CartItem(props) {
                 </div>
               </div>
 
-              <div className='text-gray-600'>Size: {size || 'N/A'}</div>
+              <div className='text-gray-600 font-medium'>
+                Size: {size || 'N/A'}
+              </div>
               <div className='flex items-center mt-2'>
-                <span className='text-gray-600 mr-2'>Màu sắc:</span>
+                <span className='text-gray-600 mr-2 font-medium'>Màu sắc:</span>
                 <div
-                  className='w-6 h-6 rounded-full border border-gray-200'
+                  className='w-7 h-7 rounded-full border border-gray-200'
                   style={{
                     backgroundColor: color,
                   }}
                 ></div>
               </div>
 
-              <div className='mt-3 flex items-center gap-4'>
-                <div className='flex items-center'>
+              <div className='mt-3 flex items-center gap-2'>
+                <div className='flex items-center gap-2'>
                   <button
                     onClick={handleMinusQuantity}
-                    className='px-2 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 '
+                    className='px-3 py-3 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-md'
                   >
                     <FiMinus />
                   </button>
                   <input
                     type='text'
-                    className='w-14 text-center border border-gray-300 px-4 py-1 outline-none'
+                    className='w-16 text-center border border-gray-300 px-4 py-2 outline-none rounded-md'
                     value={quantity}
                     min='1'
                     readOnly
                   />
                   <button
                     onClick={handlePlusQuantity}
-                    className='px-3 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 '
+                    className='px-3 py-3 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-md'
                   >
                     <GoPlus />
                   </button>
@@ -155,7 +157,7 @@ function CartItem(props) {
 
                 <button
                   onClick={handleRemoveFromCart}
-                  className='text-[20px] text-red-600'
+                  className='text-[1.5rem] text-red-600'
                 >
                   <LiaTrashAltSolid />
                 </button>

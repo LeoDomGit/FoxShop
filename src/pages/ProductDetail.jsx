@@ -127,7 +127,7 @@ function ProductDetail() {
           </div>
           <div className='flex flex-col justify-between'>
             <div className='font-medium mb-4 flex flex-col'>
-              <span className='text-gray-500 text-sm mb-2'>
+              <span className='text-gray-500 text-[1rem] mb-2'>
                 {product.categories?.[0]?.name || 'No Category'}
               </span>
               <span className='text-[24px]'>
@@ -135,21 +135,21 @@ function ProductDetail() {
               </span>
             </div>
             <div className='text-base leading-relaxed'>
-              <div className='font-medium text-sm'>
+              <div className='font-medium text-[1rem]'>
                 Thương hiệu:{' '}
                 <span className='font-semibold'>
                   {product.brands?.name || 'No Brand'}
                 </span>
               </div>
 
-              <div className='font-medium text-sm mt-4'>
+              <div className='font-medium text-[1rem] mt-4'>
                 Màu:
-                <div className='flex space-x-2'>
+                <div className='flex space-x-4'>
                   {colorAttributes?.map((colorAttr, index) => (
                     <button
                       key={index}
                       onClick={() => handleColorSelect(colorAttr.value)}
-                      className={`w-6 h-6 rounded-full border border-gray-200 ${
+                      className={`w-8 h-8 rounded-full border border-gray-600 ${
                         selectedColor === colorAttr.value
                           ? 'ring-2 ring-offset-2 ring-[#fe5c17]'
                           : ''
@@ -181,20 +181,20 @@ function ProductDetail() {
               </div>
             </div>
 
-            <span className='text-[14px] mt-2 font-medium'>
+            <span className='text-[1rem] mt-2 font-medium'>
               <span>Còn lại trong kho:</span>{' '}
               <span className='text-[#fe5c17]'>{product.in_stock}</span>
             </span>
 
             <div className='mt-2'>
               <div className='mt-5'>
-                <h2 className='text-[14px] font-semibold mb-2'>Chọn size</h2>
+                <h2 className='text-[1rem] font-semibold mb-2'>Chọn size</h2>
                 <div className='flex space-x-4'>
                   {sizeAttributes?.map((attr, index) => (
                     <button
                       key={index}
                       onClick={() => handleSizeSelect(attr.value)} // Lấy giá trị size
-                      className={`px-3 py-1 border ${
+                      className={`px-4 py-2 border rounded-md font-medium ${
                         selectedSize === attr.value
                           ? 'bg-[#fe5c17] text-white'
                           : 'bg-gray-200 text-gray-700'
@@ -215,38 +215,38 @@ function ProductDetail() {
             <div className='flex items-center space-x-4 mt-12'>
               <button
                 onClick={handleDecrease}
-                className='px-4 py-3 bg-gray-300 hover:bg-gray-400 text-gray-700 '
+                className='px-4 py-3 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-md'
               >
                 <FiMinus />
               </button>
               <input
                 type='text'
-                className='w-[80px] text-center border border-gray-300 px-6 py-2 outline-none'
+                className='w-[80px] text-center border border-gray-300 px-6 py-2 outline-none rounded-md'
                 value={quantity}
                 readOnly
               />
               <button
                 onClick={handleIncrease}
-                className='px-4 py-3 bg-gray-300 hover:bg-gray-400 text-gray-700 '
+                className='px-4 py-3 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-md'
               >
                 <GoPlus />
               </button>
             </div>
             <div className='flex mt-12 gap-4'>
               <button
-                className='py-3 px-6 bg-[#fe5c17] hover:bg-[#fe5517] text-white shadow-md'
+                className='py-3 px-6 bg-[#fe5c17] hover:bg-[#fe5517] text-white shadow-md rounded-md'
                 onClick={handleAddToCart}
               >
                 Thêm vào giỏ
               </button>
-              <button className='py-3 px-5 border-[#fe5c17] border-[1px] text-[#fe5c17] hover:bg-[#fe5517] hover:text-white shadow-sm'>
+              <button className='py-3 px-5 border-[#fe5c17] border-[1px] text-[#fe5c17] hover:bg-[#fe5517] hover:text-white shadow-sm rounded-md'>
                 <FiShare2 className='text-[18px]' />
               </button>
             </div>
           </div>
         </div>
         <div className='flex flex-col gap-4'>
-          <span className='font-semibold'>Mô tả sản phẩm</span>
+          <span className='font-semibold text-[1.2rem]'>Mô tả sản phẩm</span>
           <div
             className='text-gray-700 text-[16px]'
             dangerouslySetInnerHTML={{ __html: product.content || '' }}

@@ -61,7 +61,6 @@ function HomePage() {
       try {
         const response = await axios.get('/products/best');
 
-        // Kiểm tra xem dữ liệu có đúng định dạng không, sau đó cập nhật state
         if (response.data && response.data.data) {
           setBestSeller(response.data.data);
         } else {

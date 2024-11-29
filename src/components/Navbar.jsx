@@ -15,6 +15,10 @@ function Navbar({ ulClass = '', liClass = '' }) {
       </li>
 
       <li className={liClass}>
+        <Link to='#'>Liên hệ</Link>
+      </li>
+
+      <li className={liClass}>
         <Link to='/about'>Giới thiệu</Link>
       </li>
 

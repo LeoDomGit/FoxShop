@@ -37,7 +37,7 @@ function HomePage() {
   const [polo, setPolo] = useState([]);
   const [bestSeller, setBestSeller] = useState([]);
   const [randomPolo, setRandomPolo] = useState([]);
-  const [loading, setLoading] = useState(true);
+
   // GET RANDOM
   const getRandomProducts = (products, count) => {
     const shuffled = products.sort(() => 0.5 - Math.random());
@@ -60,20 +60,13 @@ function HomePage() {
     const fetchBestSeller = async () => {
       try {
         const response = await axios.get('/products/best');
-
-        if (response.data && response.data.data) {
-          setBestSeller(response.data.data);
-        } else {
-          setBestSeller([]);
-        }
+        setBestSeller(
+          Array.isArray(response.data.data) ? response.data.data : []
+        );
       } catch (err) {
-        console.error('Error fetching best sellers:', err);
-        setBestSeller([]);
-      } finally {
-        setLoading(false); // Set loading false sau khi fetch xong
+        console.error('Error', err);
       }
     };
-
     fetchBestSeller();
   }, []);
 
@@ -86,9 +79,7 @@ function HomePage() {
 
   const filteredProducts = products.filter((product) => product.discount > 15);
   const shuffledProducts = randomProduct(filteredProducts);
-  if (loading) {
-    return <p>Đang tải...</p>;
-  }
+
   return (
     <div>
       <Header />

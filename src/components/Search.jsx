@@ -3,17 +3,13 @@ import { IoSearchOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 
 function Search({ searchClass = '', inputClass = '', iconPosition = '' }) {
-  const [query, setQuery] = useState('');
+  const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
 
-  const handleSearchChange = (e) => {
-    const searchQuery = e.target.value;
-    setQuery(searchQuery);
-  };
-
-  const handleSearchSubmit = () => {
-    if (query) {
-      navigate(`/search?q=${query}`); // Điều hướng tới trang tìm kiếm với query
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && keyword.trim()) {
+      navigate(`/search?q=${encodeURIComponent(keyword.trim())}`); // Mã hóa từ khóa để tránh lỗi URL
+      console.log(`/search?q=${keyword.trim()}`); // Debug URL
     }
   };
 
@@ -24,9 +20,9 @@ function Search({ searchClass = '', inputClass = '', iconPosition = '' }) {
         type='text'
         placeholder='Bạn đang tìm gì!'
         className={inputClass}
-        value={query}
-        onChange={handleSearchChange}
-        onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()} // Gửi tìm kiếm khi nhấn Enter
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+        onKeyDown={handleSearch}
       />
     </div>
   );

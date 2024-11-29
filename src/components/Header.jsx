@@ -1,14 +1,11 @@
-/* eslint-disable */
 import logo from '../assets/logo.png';
-import VietNam from '../assets/image/VietNam.png';
-import England from '../assets/image/England.png';
+
 import Navbar from '../components/Navbar';
 import Search from '../components/Search';
-import React, { useState, useContext } from 'react'; // Thêm useContext vào đây
+import React, { useState } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { CiMenuBurger } from 'react-icons/ci';
-import { IoIosHeartEmpty } from 'react-icons/io';
 import { HiOutlineShoppingCart } from 'react-icons/hi2';
 import { useSelector } from 'react-redux';
 import { clearCartLogout } from '../stores/cart';
@@ -17,16 +14,10 @@ import { toast } from 'react-toastify';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [language, setLanguage] = useState('vi');
   const [showMenu, setShowMenu] = useState(false);
   const avatar = localStorage.getItem('avatar');
   const cartItems = useSelector((state) => state.cart.items);
   const totalProducts = cartItems.length;
-
-  const handleLanguageChange = (event) => {
-    const selectedLanguage = event.target.value;
-    setLanguage(selectedLanguage);
-  };
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -65,17 +56,20 @@ function Header() {
           />
 
           <div className='hidden xl:flex md:flex items-center gap-10 text-xl cursor-pointer z-10'>
-            <Link to='#'>
+            {/* <Link to='#'>
               <IoIosHeartEmpty className='hover:text-[#fe5c17]' />
-            </Link>
+            </Link> */}
             <Link to='/cart'>
               <div className='relative'>
-                <HiOutlineShoppingCart className='hover:text-[#fe5c17] text-2xl' />
-                {totalProducts > 0 && (
-                  <span className='absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center'>
-                    {totalProducts}
-                  </span>
-                )}
+                <div className='flex items-center gap-2 hover:text-[#fe5c17] '>
+                  {/* <span className='text-base'>Giỏ hàng</span> */}
+                  <HiOutlineShoppingCart className='text-2xl' />
+                  {totalProducts > 0 && (
+                    <span className='absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center'>
+                      {totalProducts}
+                    </span>
+                  )}
+                </div>
               </div>
             </Link>
           </div>

@@ -5,11 +5,7 @@ import Filter from '../components/Filter';
 import ProductItem from '../components/ProductItem';
 import Pagination from '../components/Pagination';
 import { CiFilter } from 'react-icons/ci';
-import {
-  fetchAllProducts,
-  fetchCategories,
-  fetchBrands,
-} from '../services/productService';
+import axios from '../api/axios';
 
 function ProductPage() {
   useEffect(() => {
@@ -17,47 +13,33 @@ function ProductPage() {
   }, []);
 
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [filters, setFilters] = useState({
-    category: null,
-    brand: null,
-    minPrice: 50000,
-    maxPrice: 5000000,
-  });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProducts = async () => {
       try {
-        const categoriesData = await fetchCategories();
-        const brandsData = await fetchBrands();
+        const response = await axios.get(`/products?page=${currentPage}`);
+        let fetchedProducts = response.data.data;
 
-        setCategories(categoriesData);
-        setBrands(brandsData);
-
-        const productsData = await fetchAllProducts(filters);
-        setProducts(productsData);
-        setTotalPages(Math.ceil(productsData.length / 16));
+        setProducts(fetchedProducts);
+        setTotalPages(response.data.last_page);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching products:', error);
       }
     };
 
-    fetchData();
-  }, [filters]); // Re-fetch when filters change
+    fetchProducts();
+  }, [currentPage]);
 
-  const handleFilterChange = (newFilters) => {
-    setFilters((prevFilters) => {
-      const updatedFilters = { ...prevFilters, ...newFilters };
-      return updatedFilters;
-    });
+  const toggleFilter = () => {
+    setIsFilterVisible(!isFilterVisible);
   };
 
-  const toggleFilter = () => setIsFilterVisible(!isFilterVisible);
-  const closeFilter = () => setIsFilterVisible(false);
+  const closeFilter = () => {
+    setIsFilterVisible(false);
+  };
 
   return (
     <div className='flex flex-col min-h-screen'>
@@ -80,7 +62,6 @@ function ProductPage() {
               <ProductItem key={product.id} product={product} />
             ))}
           </div>
-
           {products.length > 0 && (
             <Pagination
               currentPage={currentPage}
@@ -100,20 +81,7 @@ function ProductPage() {
             className='bg-white w-4/5 max-w-xs h-full transform transition-transform duration-300 translate-x-0'
             onClick={(e) => e.stopPropagation()}
           >
-            <Filter
-              categories={categories}
-              brands={brands}
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              onClearFilters={() =>
-                setFilters({
-                  category: null,
-                  brand: null,
-                  minPrice: 50000,
-                  maxPrice: 5000000,
-                })
-              }
-            />
+            <Filter />
           </div>
         </div>
       )}

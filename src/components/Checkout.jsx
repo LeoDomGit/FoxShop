@@ -250,7 +250,10 @@ function Checkout() {
 
         {/* Tỉnh/Thành phố */}
         <div className='mb-4'>
-          <label htmlFor='province' className='block text-sm font-medium mb-2'>
+          <label
+            htmlFor='province'
+            className='block text-sm font-medium mb-2 text-[1rem]'
+          >
             Tỉnh/Thành Phố
           </label>
           <select
@@ -261,7 +264,7 @@ function Checkout() {
               setSelectedDistrict('');
               setSelectedCommune('');
             }}
-            className='w-full border rounded-lg p-2 focus:outline-none'
+            className='w-full border rounded-lg p-2 focus:outline-none text-[16px] text-gray-900]'
           >
             <option value=''>Chọn tỉnh/thành phố</option>
             {provinces.map((province) => (
@@ -274,7 +277,10 @@ function Checkout() {
 
         {/* Quận/Huyện */}
         <div className='mb-4'>
-          <label htmlFor='district' className='block text-sm font-medium mb-2'>
+          <label
+            htmlFor='district'
+            className='block text-sm font-medium mb-2 text-[1rem]'
+          >
             Quận/Huyện
           </label>
           <select
@@ -284,7 +290,7 @@ function Checkout() {
               setSelectedDistrict(e.target.value);
               setSelectedCommune('');
             }}
-            className='w-full border rounded-lg p-2 focus:outline-none'
+            className='w-full border rounded-lg p-2 focus:outline-none text-[16px] text-gray-900]'
           >
             <option value=''>Chọn quận/huyện</option>
             {filteredDistricts.map((district) => (
@@ -297,14 +303,17 @@ function Checkout() {
 
         {/* Xã/Phường */}
         <div className='mb-4'>
-          <label htmlFor='commune' className='block text-sm font-medium mb-2'>
+          <label
+            htmlFor='commune'
+            className='block text-sm font-medium mb-2 text-[1rem]'
+          >
             Xã/Phường
           </label>
           <select
             id='commune'
             value={selectedCommune}
             onChange={(e) => setSelectedCommune(e.target.value)}
-            className='w-full border rounded-lg p-2 focus:outline-none'
+            className='w-full border rounded-lg p-2 focus:outline-none text-[16px] text-gray-900]'
           >
             <option value=''>Chọn xã/phường</option>
             {filteredCommunes.map((commune) => (
@@ -319,7 +328,7 @@ function Checkout() {
         <div className='mb-4'>
           <label
             htmlFor='addressDetail'
-            className='block text-sm font-medium mb-2'
+            className='block text-sm font-medium mb-2 text-[1rem]'
           >
             Số nhà/Tên đường
           </label>
@@ -329,13 +338,16 @@ function Checkout() {
             value={addressDetail}
             onChange={(e) => setAddressDetail(e.target.value)}
             placeholder='Số nhà/Tên đường'
-            className='w-full border rounded-lg p-2 focus:outline-none'
+            className='w-full border rounded-lg p-2 focus:outline-none text-[16px] text-gray-900]'
           />
         </div>
 
         {/* Số điện thoại */}
         <div className='mb-4'>
-          <label htmlFor='phone' className='block text-sm font-medium mb-2'>
+          <label
+            htmlFor='phone'
+            className='block text-sm font-medium mb-2 text-[1rem]'
+          >
             Số điện thoại
           </label>
           <input
@@ -344,13 +356,16 @@ function Checkout() {
             value={form.phone}
             onChange={handleChange}
             placeholder='Số điện thoại'
-            className='w-full border rounded-lg p-2 focus:outline-none'
+            className='w-full border rounded-lg p-2 focus:outline-none text-[16px] text-gray-900]'
           />
         </div>
 
         {/* Ghi chú */}
         <div className='mb-4'>
-          <label htmlFor='note' className='block text-sm font-medium mb-2'>
+          <label
+            htmlFor='note'
+            className='block text-sm font-medium mb-2 text-[1rem]'
+          >
             Ghi chú
           </label>
           <textarea
@@ -358,14 +373,14 @@ function Checkout() {
             value={form.note}
             onChange={handleChange}
             placeholder='Ghi chú đơn hàng'
-            className='w-full border rounded-lg p-2 focus:outline-none'
+            className='w-full border rounded-lg p-2 focus:outline-none text-[16px] text-gray-900]'
           />
         </div>
 
         {/* Tổng tiền */}
         <div className='mb-4'>
-          <span className='text-sm font-semibold'>Tổng tiền:</span>
-          <span className='text-sm font-bold text-[#fe5117] ml-2'>
+          <span className='text-[1rem] font-semibold'>Tổng tiền:</span>
+          <span className='text-[1rem] font-bold text-[#fe5117] ml-2'>
             {(totalPrice - discountAmount).toLocaleString('vi-VN')} VND
           </span>
           {selectedVoucher && (
@@ -380,13 +395,13 @@ function Checkout() {
         <div className='flex flex-col gap-4'>
           <button
             onClick={() => handleCheckout('cash')}
-            className='bg-blue-500 text-white rounded-lg py-2'
+            className='bg-[#fe5c17] text-white rounded-md py-3'
           >
             Thanh toán khi nhận hàng
           </button>
           <button
             onClick={() => handleCheckout('card')}
-            className='bg-green-500 text-white rounded-lg py-2'
+            className='bg-green-700 text-white rounded-md py-3'
           >
             Thanh toán qua thẻ
           </button>

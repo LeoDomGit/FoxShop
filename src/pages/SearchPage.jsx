@@ -19,7 +19,7 @@ function SearchPage() {
   const [loading, setLoading] = useState(true);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(1);
+  const [productsPerPage] = useState(16);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {

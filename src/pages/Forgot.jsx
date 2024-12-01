@@ -19,25 +19,26 @@ function Forgot() {
     setError('');
     setMessage('');
 
-    // Hiển thị thông báo chờ
-    const loadingToastId = toast.loading('Đang xử lý, vui lòng đợi...');
-
     // Validate phía client
     if (!/\S+@\S+\.\S+/.test(email)) {
-      toast.update(loadingToastId, {
-        render: 'Email không đúng định dạng!',
-        type: 'error',
-        isLoading: false,
-        autoClose: 5000,
-      });
+      toast.error('Email không đúng định dạng!', { autoClose: 5000 });
       return;
     }
 
     try {
+      const validateResponse = await axios.post('/forgot/validate-email', {
+        email,
+      });
+
+      if (!validateResponse.data.valid) {
+        toast.error('Email không tồn tại trong hệ thống!');
+        return;
+      }
+
+      const loadingToastId = toast.loading('Đang xử lý, vui lòng đợi...');
+
       const response = await axios.post('/forgot', { email });
       setMessage(response.data.message);
-
-      // Hiển thị thành công
       toast.update(loadingToastId, {
         render: 'Kiểm tra email để đặt lại mật khẩu!',
         type: 'success',
@@ -49,13 +50,7 @@ function Forgot() {
         err.response?.data?.errors?.email || 'Đã xảy ra lỗi.';
       setError(errorMessage);
 
-      // Hiển thị lỗi
-      toast.update(loadingToastId, {
-        render: errorMessage,
-        type: 'error',
-        isLoading: false,
-        autoClose: 5000,
-      });
+      toast.error(errorMessage, { autoClose: 5000 });
     }
   };
 
@@ -90,10 +85,10 @@ function Forgot() {
           >
             Xác nhận
           </button>
+          {message && (
+            <p className='text-green-500 mt-4 text-center'>{message}</p>
+          )}
         </form>
-        {message && (
-          <p className='text-green-500 mt-4 text-center'>{message}</p>
-        )}
       </div>
     </div>
   );

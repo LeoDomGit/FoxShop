@@ -125,7 +125,7 @@ function CartItem(props) {
               <div className='flex items-center mt-2'>
                 <span className='text-gray-600 mr-2 font-medium'>Màu sắc:</span>
                 <div
-                  className='w-7 h-7 rounded-full border border-gray-200'
+                  className='w-7 h-7 rounded-full border border-gray-800'
                   style={{
                     backgroundColor: color,
                   }}
@@ -136,20 +136,20 @@ function CartItem(props) {
                 <div className='flex items-center gap-2'>
                   <button
                     onClick={handleMinusQuantity}
-                    className='px-3 py-3 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-md'
+                    className='px-2 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-md'
                   >
                     <FiMinus />
                   </button>
                   <input
                     type='text'
-                    className='w-16 text-center border border-gray-300 px-4 py-2 outline-none rounded-md'
+                    className='w-16 text-center border border-gray-300 px-4 py-1 outline-none rounded-md'
                     value={quantity}
                     min='1'
                     readOnly
                   />
                   <button
                     onClick={handlePlusQuantity}
-                    className='px-3 py-3 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-md'
+                    className='px-2 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-md'
                   >
                     <GoPlus />
                   </button>

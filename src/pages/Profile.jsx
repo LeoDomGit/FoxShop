@@ -6,7 +6,6 @@ import axios from '../api/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from '../components/Modal';
-import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   const [formData, setFormData] = useState({
@@ -15,15 +14,17 @@ function Profile() {
     phone: '',
     currentPassword: '',
     newPassword: '',
-    newPasswordConfirmation: '', // Sử dụng snake_case để đồng bộ với Laravel
+    newPasswordConfirmation: '',
   });
-
-  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  useEffect(() => {
+    document.title = 'Quản lý tài khoản';
+  }, []);
 
   useEffect(() => {
     const avatar = localStorage.getItem('avatar');
@@ -76,9 +77,9 @@ function Profile() {
       });
 
       if (response.status === 200) {
-        toast.success('Tài khoản đã được xóa thành công.');
         localStorage.clear();
         window.location.href = '/';
+        toast.success('Tài khoản đã được xóa thành công.');
       } else {
         toast.error('Xóa tài khoản thất bại. Vui lòng thử lại.');
       }
@@ -88,7 +89,7 @@ function Profile() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleProfileSubmit = async (e) => {
     e.preventDefault();
 
     const userId = localStorage.getItem('userId');
@@ -100,27 +101,11 @@ function Profile() {
     if (formData.name !== localStorage.getItem('name')) {
       formDataToSend.append('name', formData.name);
       hasChanges = true;
-      navigate('/');
     }
     if (formData.phone !== localStorage.getItem('phone')) {
       formDataToSend.append('phone', formData.phone);
       hasChanges = true;
-      navigate('/');
     }
-    if (
-      formData.currentPassword &&
-      formData.newPassword &&
-      formData.newPasswordConfirmation
-    ) {
-      formDataToSend.append('currentPassword', formData.currentPassword);
-      formDataToSend.append('newPassword', formData.newPassword);
-      formDataToSend.append(
-        'newPassword_confirmation',
-        formData.newPasswordConfirmation
-      );
-      hasChanges = true;
-    }
-
     if (fileInputRef.current.files[0]) {
       formDataToSend.append('avatar', fileInputRef.current.files[0]);
       hasChanges = true;
@@ -132,7 +117,7 @@ function Profile() {
     }
 
     try {
-      const response = await axios.post('/update/user', formDataToSend, {
+      const response = await axios.post('/update-profile', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -147,27 +132,52 @@ function Profile() {
 
       localStorage.setItem('name', formData.name);
       localStorage.setItem('phone', formData.phone);
-
-      if (
-        formData.currentPassword &&
-        formData.newPassword &&
-        formData.newPasswordConfirmation
-      ) {
-        toast.info('Mật khẩu đã được thay đổi. Hãy đăng nhập lại.');
-
-        localStorage.removeItem('userId');
-        localStorage.removeItem('token');
-        localStorage.removeItem('avatar');
-        localStorage.removeItem('phone');
-
-        window.location.href = '/';
-      }
       setErrors({});
     } catch (error) {
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors);
       } else {
         toast.error('Đã xảy ra lỗi, vui lòng thử lại!');
+      }
+    }
+  };
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+
+    const userId = localStorage.getItem('userId');
+
+    if (
+      !formData.currentPassword ||
+      !formData.newPassword ||
+      !formData.newPasswordConfirmation
+    ) {
+      toast.info('Vui lòng điền đầy đủ thông tin mật khẩu.');
+      return;
+    }
+
+    const passwordData = {
+      id: userId,
+      currentPassword: formData.currentPassword,
+      newPassword: formData.newPassword,
+      newPassword_confirmation: formData.newPasswordConfirmation,
+    };
+
+    try {
+      const response = await axios.post('/update-password', passwordData);
+
+      localStorage.removeItem('userId');
+      localStorage.removeItem('token');
+      localStorage.removeItem('avatar');
+      localStorage.removeItem('phone');
+
+      window.location.href = '/';
+      toast.success('Mật khẩu đã được thay đổi. Hãy đăng nhập lại.');
+    } catch (error) {
+      if (error.response && error.response.data.errors) {
+        setErrors(error.response.data.errors);
+      } else {
+        toast.error('Đã xảy ra lỗi khi thay đổi mật khẩu!');
       }
     }
   };
@@ -181,7 +191,7 @@ function Profile() {
             <div className='w-full p-6 bg-white'>
               <h1 className='text-2xl font-semibold mb-4'>Quản lý tài khoản</h1>
 
-              <form onSubmit={handleSubmit} className='space-y-4'>
+              <form onSubmit={handleProfileSubmit} className='space-y-4'>
                 <div className='flex items-center flex-col'>
                   <img
                     src={formData.avatar}
@@ -206,6 +216,9 @@ function Profile() {
                   </div>
                 </div>
 
+                <div className='font-semibold text-[1.2rem]'>
+                  Cập nhật thông tin
+                </div>
                 <div>
                   <label className='font-medium text-[14px]' htmlFor='name'>
                     Họ và tên
@@ -242,6 +255,18 @@ function Profile() {
                   )}
                 </div>
 
+                <button
+                  type='submit'
+                  className='py-2 px-3 bg-[#fe5c17] text-white font-medium text-[14px] rounded-md'
+                >
+                  Cập nhật thông tin
+                </button>
+              </form>
+
+              <form onSubmit={handlePasswordSubmit} className='space-y-4'>
+                <div className='font-semibold text-[1.2rem] mt-10'>
+                  Cập nhật mật khẩu
+                </div>
                 <div>
                   <label
                     className='font-medium text-[14px]'
@@ -304,18 +329,18 @@ function Profile() {
                   )}
                 </div>
 
-                <div className='flex gap-3'>
+                <div className='flex gap-3 items-center'>
                   <button
                     type='submit'
-                    className='w-32 py-2 px-3 bg-[#fe5c17] text-white font-medium text-[14px] rounded-md'
+                    className='py-2 px-3 bg-[#fe5c17] text-white font-medium text-[14px] rounded-md'
                   >
-                    Cập nhật
+                    Cập nhật mật khẩu
                   </button>
 
                   <button
                     type='button'
-                    onClick={() => setIsDeleteModalOpen(true)} // Mở modal xác nhận
-                    className='w-32 py-2 px-3 bg-red-600 text-white font-medium text-[14px] rounded-md'
+                    onClick={() => setIsDeleteModalOpen(true)}
+                    className='py-2 px-3 bg-red-600 text-white font-medium text-[14px] rounded-md'
                   >
                     Xóa tài khoản
                   </button>
@@ -324,8 +349,8 @@ function Profile() {
                     <Modal
                       title='Xác nhận xóa tài khoản'
                       message='Bạn có chắc chắn muốn xóa tài khoản này không? Hành động này không thể hoàn tác.'
-                      onConfirm={handleDelete} // Gọi hàm handleDelete khi xác nhận
-                      onCancel={() => setIsDeleteModalOpen(false)} // Đóng modal nếu không muốn xóa
+                      onConfirm={handleDelete}
+                      onCancel={() => setIsDeleteModalOpen(false)}
                     />
                   )}
                 </div>

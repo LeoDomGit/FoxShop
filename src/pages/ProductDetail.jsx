@@ -234,11 +234,17 @@ function ProductDetail() {
             </div>
             <div className='flex mt-12 gap-4'>
               <button
-                className='py-3 px-6 bg-[#fe5c17] hover:bg-[#fe5517] text-white shadow-md rounded-md'
+                className={`py-3 px-6 ${
+                  product.in_stock > 0
+                    ? 'bg-[#fe5c17] hover:bg-[#fe5517] text-white'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                } shadow-md rounded-md`}
                 onClick={handleAddToCart}
+                disabled={product.in_stock <= 0} // Disable nếu in_stock <= 0
               >
                 Thêm vào giỏ
               </button>
+
               <button className='py-3 px-5 border-[#fe5c17] border-[1px] text-[#fe5c17] hover:bg-[#fe5517] hover:text-white shadow-sm rounded-md'>
                 <FiShare2 className='text-[18px]' />
               </button>

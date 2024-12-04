@@ -97,15 +97,15 @@ function Header() {
 
             {showMenu && avatar && (
               <div
-                className='absolute right-0 mt-2 w-48 bg-white shadow-lg border rounded-md z-50'
+                className='absolute right-0 mt-3 w-48 bg-white shadow-lg border rounded-md z-50'
                 onMouseEnter={() => setShowMenu(true)}
                 onMouseLeave={() => setShowMenu(false)}
               >
-                <div className='absolute -top-2 right-4 w-4 h-4 bg-white rotate-45 border-l border-t border-gray-300'></div>
+                <div className='absolute -top-3 right-2 w-6 h-6 -z-10 bg-white rotate-45 border-l border-t border-gray-300'></div>
 
                 <Link
                   to='/profile'
-                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 z-20'
                 >
                   Tài khoản của tôi
                 </Link>
@@ -131,7 +131,7 @@ function Header() {
           />
 
           <div
-            className={`absolute text-center xl:hidden top-[70px] left-0 drop-shadow-sm w-full bg-white border-t transform transition-all ${
+            className={`absolute text-center xl:hidden top-[70px] left-0 drop-shadow-sm w-full bg-white border-t transform transition-all z-0 ${
               isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
             }`}
             style={{ transition: 'transform 0.3s ease, opacity 0.3s ease' }}
@@ -140,7 +140,7 @@ function Header() {
               <div className='w-full border-b-2 border-[#fe5c17] text-[#fe5c17]'></div>
             </div>
 
-            <div>
+            <div className='z-20'>
               <Navbar
                 ulClass='flex flex-col text-start'
                 liClass='list-none px-8 border-b w-full p-2 hover:bg-white hover:text-[#fe5c17] transition-all cursor-pointer'

@@ -191,6 +191,7 @@ function Checkout() {
             autoClose: 3000,
           });
         }
+        dispatch(clearCart());
       }
     } catch (error) {
       console.error('Error processing checkout:', error);

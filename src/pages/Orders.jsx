@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from '../api/axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 
 function Orders() {
@@ -206,7 +206,6 @@ function Orders() {
         </div>
       </main>
       <Footer />
-      <ToastContainer />
     </div>
   );
 }

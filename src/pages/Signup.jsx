@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FaGoogle } from 'react-icons/fa';
+import { FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import { toast } from 'react-toastify';
+import logo from '../assets/logo.png';
 
 function Signup() {
   useEffect(() => {
@@ -11,15 +12,15 @@ function Signup() {
 
   const navigate = useNavigate();
 
-  // States for form inputs
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [password_confirm, setPasswordConfirmation] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // Hàm xử lý đăng ký
   const handleRegister = async (event) => {
     event.preventDefault();
 
@@ -30,7 +31,6 @@ function Signup() {
       return;
     }
 
-    // Hiển thị thông báo đang xử lý
     const loadingToastId = toast.loading(
       'Đang xử lý vui lòng đợi trong giây lát.'
     );
@@ -44,7 +44,6 @@ function Signup() {
         password_confirm,
       });
 
-      // Xóa form và lỗi
       setName('');
       setEmail('');
       setPhone('');
@@ -52,7 +51,6 @@ function Signup() {
       setPasswordConfirmation('');
       setErrors({});
 
-      // Cập nhật toast sau khi đăng ký thành công
       toast.update(loadingToastId, {
         render: 'Đăng kí thành công!',
         type: 'success',
@@ -60,9 +58,8 @@ function Signup() {
         autoClose: 2000,
       });
 
-      navigate('/login'); // Chuyển hướng về trang login
+      navigate('/login');
     } catch (e) {
-      // Cập nhật toast nếu có lỗi
       toast.update(loadingToastId, {
         render: 'Có lỗi xảy ra, vui lòng thử lại!',
         type: 'error',
@@ -79,9 +76,10 @@ function Signup() {
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
       <div className='bg-white p-8 rounded-md shadow-lg w-full max-w-lg'>
-        <h2 className='text-2xl font-semibold mb-6 text-center'>Đăng kí</h2>
+        <div className='flex items-center justify-center'>
+          <img className='w-32 object-cover ' src={logo} alt='' />
+        </div>
 
-        {/* Form đăng kí */}
         <form className='space-y-4' onSubmit={handleRegister}>
           {/* Họ và Tên */}
           <div>
@@ -148,16 +146,25 @@ function Signup() {
             <label className='block text-sm font-medium text-gray-700'>
               Mật khẩu
             </label>
-            <input
-              type='password'
-              name='password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md outline-none ${
-                errors.password ? 'border-red-500' : ''
-              }`}
-              placeholder='Nhập mật khẩu'
-            />
+            <div className='relative'>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`w-full px-3 py-2 border rounded-md outline-none ${
+                  errors.password ? 'border-red-500' : ''
+                }`}
+                placeholder='Nhập mật khẩu'
+              />
+              <button
+                type='button'
+                className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500'
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
             {errors.password && (
               <p className='text-red-500 text-sm'>{errors.password[0]}</p>
             )}
@@ -168,16 +175,25 @@ function Signup() {
             <label className='block text-sm font-medium text-gray-700'>
               Xác nhận mật khẩu
             </label>
-            <input
-              type='password'
-              name='password_confirm'
-              value={password_confirm}
-              onChange={(e) => setPasswordConfirmation(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md outline-none ${
-                errors.password_confirm ? 'border-red-500' : ''
-              }`}
-              placeholder='Xác nhận mật khẩu'
-            />
+            <div className='relative'>
+              <input
+                type={showPasswordConfirm ? 'text' : 'password'}
+                name='password_confirm'
+                value={password_confirm}
+                onChange={(e) => setPasswordConfirmation(e.target.value)}
+                className={`w-full px-3 py-2 border rounded-md outline-none ${
+                  errors.password_confirm ? 'border-red-500' : ''
+                }`}
+                placeholder='Xác nhận mật khẩu'
+              />
+              <button
+                type='button'
+                className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500'
+                onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+              >
+                {showPasswordConfirm ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
             {errors.password_confirm && (
               <p className='text-red-500 text-sm'>
                 {errors.password_confirm[0]}
@@ -193,7 +209,6 @@ function Signup() {
           </button>
         </form>
 
-        {/* Google Signup */}
         <div className='mt-4 text-sm text-gray-700 text-center'>Or</div>
         <div className='mt-4 flex justify-center'>
           <button className='flex items-center bg-red-500 text-white px-4 py-2 rounded-md text-[14px] hover:bg-red-600 w-full justify-center'>
@@ -202,7 +217,6 @@ function Signup() {
           </button>
         </div>
 
-        {/* Login link */}
         <div className='mt-4 text-sm flex gap-1 font-medium text-gray-500 justify-center'>
           <span>Đã có tài khoản?</span>
           <Link to='/login' className='hover:text-[#fe5c17]'>

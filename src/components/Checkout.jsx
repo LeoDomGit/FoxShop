@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector, useDispatch } from 'react-redux'; // Import useDispatch
 import { clearCart } from '../stores/cart'; // Import clearCart action
+import { useNavigate } from 'react-router-dom';
 
 function Checkout() {
   const [provinces, setProvinces] = useState([]);
@@ -26,6 +27,8 @@ function Checkout() {
   const [vouchers, setVouchers] = useState([]);
   const [selectedVoucher, setSelectedVoucher] = useState(null);
   const [discountAmount, setDiscountAmount] = useState(0);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchVouchers() {
@@ -160,8 +163,11 @@ function Checkout() {
           render: 'Đặt hàng thành công!',
           type: 'success',
           isLoading: false,
-          autoClose: 3000, // Đóng sau 3 giây
+          autoClose: 3000,
         });
+
+        navigate('/thankyou');
+
         console.log('Order saved successfully:', response.data);
         dispatch(clearCart());
       } else if (paymentMethod === 'card') {

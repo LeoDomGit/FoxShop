@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from '../api/axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-
+import { toast, ToastContainer } from 'react-toastify';
 import { Link } from 'react-router-dom';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
   const imgUrl = process.env.REACT_APP_URL_IMAGE;
-
   const [openDetails, setOpenDetails] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const toggleDetails = (orderId) => {
     setOpenDetails((prev) => ({
@@ -22,26 +22,40 @@ function Orders() {
     return amount.toLocaleString('vi-VN') + ' VND';
   };
 
+  const fetchOrders = async () => {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      try {
+        const response = await axios.get(`/orders/${userId}`);
+        setOrders(response.data);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        toast.error('Lỗi khi tải danh sách đơn hàng.');
+      }
+    }
+  };
+
   useEffect(() => {
     document.title = 'Đơn hàng';
+    fetchOrders();
   }, []);
 
-  useEffect(() => {
-    const userId = localStorage.getItem('userId');
-
-    if (userId) {
-      const fetchOrders = async () => {
-        try {
-          const response = await axios.get(`/orders/${userId}`);
-          setOrders(response.data);
-        } catch (error) {
-          console.error('Error fetching orders:', error);
-        }
-      };
-
-      fetchOrders();
+  const cancelOrder = async (orderId) => {
+    setLoading(true);
+    try {
+      const response = await axios.post('/orders/cancel', {
+        order_id: orderId,
+      });
+      if (response.status === 200) {
+        fetchOrders();
+        toast.success('Hủy đơn hàng thành công!');
+      }
+    } catch (error) {
+      toast.error('Hủy đơn hàng thất bại. Vui lòng thử lại!');
+    } finally {
+      setLoading(false);
     }
-  }, []);
+  };
 
   const getStatusLabel = (status) => {
     switch (status) {
@@ -54,7 +68,7 @@ function Orders() {
         return { label: 'Đang xử lý', color: 'text-white bg-blue-500' };
       case 'completed':
         return { label: 'Đã hoàn thành', color: 'text-white bg-green-500' };
-      case 'cancelled':
+      case 'canceled':
         return { label: 'Đã hủy', color: 'text-white bg-red-500' };
       default:
         return { label: 'Không rõ', color: 'text-white bg-gray-500' };
@@ -75,17 +89,17 @@ function Orders() {
                 key={order.id}
               >
                 <div className='flex justify-between gap-2 flex-wrap pb-2'>
-                  <div className='flex flex-col gap-2 items-center'>
+                  <div className='flex flex-col gap-2 '>
                     <span className='font-semibold'>Mã đơn hàng</span>
-                    <span className='p-2 bg-[#fe5c17] text-white rounded-full text-sm'>
+                    <span className='p-2 bg-[#fe5c17] text-white rounded-full text-sm text-center'>
                       {order.id}
                     </span>
                   </div>
 
-                  <div className='flex flex-col items-center gap-2'>
+                  <div className='flex flex-col  gap-2'>
                     <div className='font-semibold'>Trạng thái đơn hàng</div>
                     <div
-                      className={`py-2 px-3 rounded-full text-white text-sm ${
+                      className={`py-2 px-3 rounded-full text-white text-sm text-center ${
                         getStatusLabel(order.status).color
                       }`}
                     >
@@ -93,21 +107,21 @@ function Orders() {
                     </div>
                   </div>
 
-                  <div className='flex flex-col gap-2 items-center'>
+                  <div className='flex flex-col gap-2 '>
                     <span className='font-semibold'>Ngày đặt hàng</span>
                     <span className='font-medium'>
                       {new Date(order.order_date).toLocaleDateString()}
                     </span>
                   </div>
 
-                  <div className='flex flex-col gap-2 items-center'>
+                  <div className='flex flex-col gap-2 '>
                     <span className='font-semibold'>Tổng tiền</span>
                     <span className='font-medium'>
                       {formatCurrency(order.total_amount)}
                     </span>
                   </div>
 
-                  <div className='flex flex-col gap-2 items-center'>
+                  <div className='flex flex-col gap-2 '>
                     <span className='font-semibold'>
                       Phương thức thanh toán
                     </span>
@@ -116,7 +130,7 @@ function Orders() {
                     </span>
                   </div>
 
-                  <div className='flex flex-col gap-2 items-center'>
+                  <div className='flex flex-col gap-2 '>
                     <button
                       className='py-2 px-3 rounded-full bg-[#fe5c17] text-white text-sm'
                       onClick={() => toggleDetails(order.id)}
@@ -128,24 +142,24 @@ function Orders() {
 
                 {openDetails[order.id] && (
                   <div className=''>
-                    <div className='mt-4  border-t'>
+                    <div className='mt-4 border-t'>
                       {order.order_details.map((detail) => (
                         <div
                           className='py-3 flex gap-3 border-b'
                           key={detail.id}
                         >
                           <div>
-                            {/* <img
-                              src={`http://127.0.0.1:8000/storage/products/${detail.image}`}
-                              alt='ảnh sản phẩm'
-                              className='w-28 h-32 object-cover'
-                            /> */}
-
                             <img
                               src={`${imgUrl}${detail.image}`}
                               alt='ảnh sản phẩm'
-                              className='w-28 h-32 object-cover'
+                              className='w-32 h-36 object-cover'
                             />
+
+                            {/* <img
+                              src={`http://127.0.0.1:8000/storage/products/${detail.image}`}
+                              alt='ảnh sản phẩm'
+                              className='w-32 h-36 object-cover'
+                            /> */}
                           </div>
 
                           <div className='flex flex-col gap-2 text-gray-800'>
@@ -169,11 +183,17 @@ function Orders() {
                         </div>
                       ))}
                     </div>
-                    <div className='flex justify-end'>
-                      <button className='py-2 px-3 bg-red-500 hover:bg-red-400 rounded-full shadow-sm text-sm text-white mt-3 '>
-                        Hủy đơn hàng
-                      </button>
-                    </div>
+                    {order.status === 'pending' && (
+                      <div className='flex justify-end'>
+                        <button
+                          className='py-2 px-3 bg-red-500 hover:bg-red-400 rounded-full shadow-sm text-sm text-white mt-3 disabled:opacity-50'
+                          onClick={() => cancelOrder(order.id)}
+                          disabled={loading}
+                        >
+                          {loading ? 'Đang xử lý...' : 'Hủy đơn hàng'}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -186,6 +206,7 @@ function Orders() {
         </div>
       </main>
       <Footer />
+      <ToastContainer />
     </div>
   );
 }

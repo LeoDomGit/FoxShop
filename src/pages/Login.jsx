@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { FaGoogle } from 'react-icons/fa';
+import { FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import { loadCartFromLocalStorage } from '../stores/cart';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import logo from '../assets/logo.png';
 
 function Login() {
   useEffect(() => {
     document.title = 'Đăng nhập';
+
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+      setEmail(rememberedEmail);
+    }
   }, []);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State để hiển thị/ẩn mật khẩu
   const [errors, setErrors] = useState({ email: '', password: '' });
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,11 +27,14 @@ function Login() {
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    // Hiển thị thông báo đang đăng nhập
     const loadingToastId = toast.loading('Đang đăng nhập...');
 
     try {
-      const response = await axios.post('/login', { email, password });
+      const response = await axios.post('/login', {
+        email,
+        password,
+        remember: document.getElementById('rememberMe').checked,
+      });
       const token = response.data.token;
       const user = response.data.user;
 
@@ -33,11 +43,18 @@ function Login() {
       localStorage.setItem('avatar', user.avatar);
       localStorage.setItem('phone', user.phone);
       localStorage.setItem('name', user.name);
+
+      // Lưu email nếu "Ghi nhớ tài khoản" được chọn
+      if (document.getElementById('rememberMe').checked) {
+        localStorage.setItem('rememberedEmail', email);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+
       setEmail('');
       setPassword('');
       dispatch(loadCartFromLocalStorage());
 
-      // Đóng thông báo loading sau khi đăng nhập thành công
       toast.update(loadingToastId, {
         render: 'Đăng nhập thành công!',
         type: 'success',
@@ -45,9 +62,8 @@ function Login() {
         autoClose: 2000,
       });
 
-      navigate('/'); // Chuyển hướng về trang chủ
+      navigate('/');
     } catch (e) {
-      // Đóng thông báo loading sau khi có lỗi
       toast.update(loadingToastId, {
         render: 'Đăng nhập thất bại, vui lòng thử lại!',
         type: 'error',
@@ -70,14 +86,14 @@ function Login() {
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
       <div className='bg-white p-8 rounded-md shadow-lg w-full max-w-lg'>
-        <h2 className='text-2xl font-semibold mb-6 text-center'>Đăng Nhập</h2>
+        <div className='flex items-center justify-center'>
+          <img className='w-32 object-cover ' src={logo} alt='' />
+        </div>
 
-        {/* Hiển thị lỗi nếu có */}
         {errors.general && (
           <div className='text-red-500 text-sm mb-4'>{errors.general}</div>
         )}
 
-        {/* Form đăng nhập */}
         <form onSubmit={handleLogin} className='space-y-4'>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
@@ -101,15 +117,24 @@ function Login() {
             <label className='block text-sm font-medium text-gray-700'>
               Mật khẩu
             </label>
-            <input
-              type='password'
-              className={`w-full px-3 py-2 border rounded-md outline-none ${
-                errors.password ? 'border-red-500' : ''
-              }`}
-              placeholder='Nhập mật khẩu'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className='relative'>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className={`w-full px-3 py-2 border rounded-md outline-none ${
+                  errors.password ? 'border-red-500' : ''
+                }`}
+                placeholder='Nhập mật khẩu'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type='button'
+                className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500'
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
             {errors.password && (
               <p className='text-red-500 text-sm'>{errors.password}</p>
             )}
@@ -120,7 +145,9 @@ function Login() {
               type='checkbox'
               id='rememberMe'
               className='checked:bg-[#fe5c17]'
+              defaultChecked={!!localStorage.getItem('rememberedEmail')}
             />
+
             <span className='text-[14px]'>Ghi nhớ tài khoản</span>
           </div>
 
@@ -134,7 +161,6 @@ function Login() {
 
         <div className='mt-4 text-sm text-gray-700 text-center'>Or</div>
 
-        {/* Hoặc đăng nhập với Google */}
         <div className='mt-4 flex justify-center'>
           <button className=' bg-red-500 text-white px-4 py-2 rounded-md text-[14px] hover:bg-red-600 w-full '>
             <Link

@@ -6,6 +6,7 @@ import axios from '../api/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from '../components/Modal';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function Profile() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,11 @@ function Profile() {
     newPassword: '',
     newPasswordConfirmation: '',
   });
+
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showNewPasswordConfirmation, setShowNewPasswordConfirmation] =
+    useState(false);
 
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
@@ -274,20 +280,32 @@ function Profile() {
                   >
                     Mật khẩu hiện tại
                   </label>
-                  <input
-                    type='password'
-                    id='currentPassword'
-                    name='currentPassword'
-                    value={formData.currentPassword}
-                    onChange={handleChange}
-                    className='w-full p-2 border border-gray-300 focus:outline-none rounded-md'
-                  />
+                  <div className='relative'>
+                    <input
+                      type={showCurrentPassword ? 'text' : 'password'}
+                      id='currentPassword'
+                      name='currentPassword'
+                      value={formData.currentPassword}
+                      onChange={handleChange}
+                      className='w-full p-2 border border-gray-300 focus:outline-none rounded-md'
+                    />
+                    <button
+                      type='button'
+                      className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500'
+                      onClick={() =>
+                        setShowCurrentPassword(!showCurrentPassword)
+                      }
+                    >
+                      {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
                   {errors.currentPassword && (
                     <p className='text-red-500 text-sm'>
                       {errors.currentPassword}
                     </p>
                   )}
                 </div>
+
                 <div>
                   <label
                     className='font-medium text-[14px]'
@@ -295,18 +313,28 @@ function Profile() {
                   >
                     Mật khẩu mới
                   </label>
-                  <input
-                    type='password'
-                    id='newPassword'
-                    name='newPassword'
-                    value={formData.newPassword}
-                    onChange={handleChange}
-                    className='w-full p-2 border border-gray-300 focus:outline-none rounded-md'
-                  />
+                  <div className='relative'>
+                    <input
+                      type={showNewPassword ? 'text' : 'password'}
+                      id='newPassword'
+                      name='newPassword'
+                      value={formData.newPassword}
+                      onChange={handleChange}
+                      className='w-full p-2 border border-gray-300 focus:outline-none rounded-md'
+                    />
+                    <button
+                      type='button'
+                      className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500'
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                    >
+                      {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
                   {errors.newPassword && (
                     <p className='text-red-500 text-sm'>{errors.newPassword}</p>
                   )}
                 </div>
+
                 <div>
                   <label
                     className='font-medium text-[14px]'
@@ -314,14 +342,27 @@ function Profile() {
                   >
                     Xác nhận mật khẩu mới
                   </label>
-                  <input
-                    type='password'
-                    id='newPasswordConfirmation'
-                    name='newPasswordConfirmation'
-                    value={formData.newPasswordConfirmation}
-                    onChange={handleChange}
-                    className='w-full p-2 border border-gray-300 focus:outline-none rounded-md'
-                  />
+                  <div className='relative'>
+                    <input
+                      type={showNewPasswordConfirmation ? 'text' : 'password'}
+                      id='newPasswordConfirmation'
+                      name='newPasswordConfirmation'
+                      value={formData.newPasswordConfirmation}
+                      onChange={handleChange}
+                      className='w-full p-2 border border-gray-300 focus:outline-none rounded-md'
+                    />
+                    <button
+                      type='button'
+                      className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500'
+                      onClick={() =>
+                        setShowNewPasswordConfirmation(
+                          !showNewPasswordConfirmation
+                        )
+                      }
+                    >
+                      {showNewPasswordConfirmation ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
                   {errors.newPassword_confirmation && (
                     <p className='text-red-500 text-sm'>
                       {errors.newPassword_confirmation}

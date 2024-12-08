@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import { HiOutlineShoppingCart } from 'react-icons/hi2';
-import { IoIosHeartEmpty } from 'react-icons/io';
+import { useSelector } from 'react-redux';
+
 function Navbar({ ulClass = '', liClass = '' }) {
+  const cartItems = useSelector((state) => state.cart.items);
+  const totalProducts = cartItems.length;
   return (
     <ul className={ulClass}>
       <li className={liClass}>
@@ -15,26 +18,21 @@ function Navbar({ ulClass = '', liClass = '' }) {
       </li>
 
       <li className={liClass}>
-        <Link to='#'>Liên hệ</Link>
-      </li>
-
-      <li className={liClass}>
         <Link to='/about'>Giới thiệu</Link>
       </li>
 
       <li className='list-none px-8 border-b w-full p-2 hover:bg-white hover:text-[#fe5c17] transition-all cursor-pointer lg:hidden md:hidden xl:hidden '>
         <Link to='/cart'>
-          <div className='flex items-center gap-2'>
-            <span>Giỏ hàng</span>
-            <HiOutlineShoppingCart />
+          <div className='flex items-center gap-2 hover:text-[#fe5c17] '>
+            {/* <span className='text-base'>Giỏ hàng</span> */}
+            <HiOutlineShoppingCart className='text-2xl' />
+            {totalProducts > 0 && (
+              <span className='absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center'>
+                {totalProducts}
+              </span>
+            )}
           </div>
         </Link>
-      </li>
-      <li className='list-none px-8 border-b w-full p-2 hover:bg-white hover:text-[#fe5c17] transition-all cursor-pointer lg:hidden md:hidden xl:hidden '>
-        <div className='flex items-center gap-2'>
-          <span>Yêu thích</span>
-          <IoIosHeartEmpty />
-        </div>
       </li>
     </ul>
   );

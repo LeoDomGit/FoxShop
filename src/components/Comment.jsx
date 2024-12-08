@@ -207,7 +207,7 @@ function Comment({ productId }) {
       <div className='space-y-6'>
         {comments.length > 0 ? (
           comments.map((comment, index) => (
-            <div key={index} className='border p-4 shadow-sm'>
+            <div key={index} className='border p-6 shadow-sm rounded-md'>
               <div className=''>
                 <div className='text-base flex gap-3 items-center'>
                   <span className='font-semibold '>

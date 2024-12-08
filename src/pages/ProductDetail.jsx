@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import Carousel from '../components/Carousel';
 import { GoPlus } from 'react-icons/go';
 import { FiMinus, FiShare2 } from 'react-icons/fi';
-import Slider from '../components/Slider'; // Import Slider
+import Slider from '../components/Slider';
 import Comment from '../components/Comment';
 import Footer from '../components/Footer';
 import axios from '../api/axios';
@@ -18,7 +18,7 @@ function ProductDetail() {
   const { slug } = useParams();
   const [product, setProduct] = useState(null);
   const [slides, setSlides] = useState([]);
-  const [relatedProducts, setRelatedProducts] = useState([]); // State để lưu sản phẩm liên quan
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
@@ -30,7 +30,6 @@ function ProductDetail() {
   const handleSizeSelect = (size) => setSelectedSize(size);
   const handleColorSelect = (color) => setSelectedColor(color);
 
-  // Tách các thuộc tính thành hai danh sách riêng: size và color
   const sizeAttributes = product?.attributes?.filter(
     (attr) => attr.type === 'size'
   );

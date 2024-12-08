@@ -16,6 +16,7 @@ import ShippingPolicy from './pages/ShippingPolicy';
 import PurchasePolicy from './pages/PurchasePolicy';
 import ChatBox from './components/ChatBox';
 import Profile from './pages/Profile';
+import ThankYou from './pages/ThankYou';
 
 import { useDispatch } from 'react-redux';
 import { loadCartFromLocalStorage } from './stores/cart';
@@ -60,6 +61,8 @@ function App() {
 
           {/* Route trang quản lý tài khoản */}
           <Route path='/profile' element={<Profile />} />
+
+          <Route path='/thankyou' element={<ThankYou />} />
 
           {/* Route trang tìm kiếm */}
           <Route path='/search' element={<SearchPage />} />

@@ -105,7 +105,7 @@ function Login() {
     }
   };
 
-  const googleURL = process.env.REACT_APP_API_GOOGLE;
+  const googleURL = 'https://dashboard.foxshop.one/api/auth/google/redirect';
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>

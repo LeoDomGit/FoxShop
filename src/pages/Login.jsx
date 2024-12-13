@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from '../api/axios';
 import { loadCartFromLocalStorage } from '../stores/cart';
 import { useDispatch } from 'react-redux';
@@ -8,25 +8,47 @@ import { toast } from 'react-toastify';
 import logo from '../assets/logo.png';
 
 function Login() {
-  useEffect(() => {
-    document.title = 'Đăng nhập';
-
-    const rememberedEmail = localStorage.getItem('rememberedEmail');
-    if (rememberedEmail) {
-      setEmail(rememberedEmail);
-    }
-  }, []);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // State để hiển thị/ẩn mật khẩu
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({ email: '', password: '' });
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.title = 'Đăng nhập';
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    const user = params.get('user');
+
+    console.log('Token:', token);
+    console.log('User:', user);
+
+    if (token && user) {
+      try {
+        const parsedUser = JSON.parse(decodeURIComponent(user));
+
+        console.log('Parsed User:', parsedUser);
+        localStorage.setItem('token', token);
+        localStorage.setItem('userId', parsedUser.id || '');
+        localStorage.setItem('avatar', parsedUser.avatar || '');
+        localStorage.setItem('name', parsedUser.name || '');
+        localStorage.setItem('email', parsedUser.email || '');
+        localStorage.setItem('idRole', parsedUser.idRole || '');
+
+        dispatch(loadCartFromLocalStorage());
+        toast.success('Đăng nhập thành công!');
+        navigate('/');
+      } catch (error) {
+        toast.error('Lỗi khi xử lý thông tin đăng nhập!');
+      }
+    }
+  }, [location.search, dispatch, navigate]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
-
     const loadingToastId = toast.loading('Đang đăng nhập...');
 
     try {
@@ -35,16 +57,16 @@ function Login() {
         password,
         remember: document.getElementById('rememberMe').checked,
       });
+
       const token = response.data.token;
       const user = response.data.user;
 
+      // Lưu token và thông tin user vào localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('userId', user.id);
       localStorage.setItem('avatar', user.avatar);
-      localStorage.setItem('phone', user.phone);
       localStorage.setItem('name', user.name);
 
-      // Lưu email nếu "Ghi nhớ tài khoản" được chọn
       if (document.getElementById('rememberMe').checked) {
         localStorage.setItem('rememberedEmail', email);
       } else {
@@ -83,11 +105,17 @@ function Login() {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = process.env.REACT_APP_API_GOOGLE;
+  };
+
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
       <div className='bg-white p-8 rounded-md shadow-lg w-full max-w-lg'>
         <div className='flex items-center justify-center'>
-          <img className='w-32 object-cover ' src={logo} alt='' />
+          <Link to='/'>
+            <img className='w-32 object-cover ' src={logo} alt='Logo' />
+          </Link>
         </div>
 
         {errors.general && (
@@ -147,7 +175,6 @@ function Login() {
               className='checked:bg-[#fe5c17]'
               defaultChecked={!!localStorage.getItem('rememberedEmail')}
             />
-
             <span className='text-[14px]'>Ghi nhớ tài khoản</span>
           </div>
 
@@ -159,17 +186,17 @@ function Login() {
           </button>
         </form>
 
-        <div className='mt-4 text-sm text-gray-700 text-center'>Or</div>
+        <div className='mt-4 text-sm text-gray-700 text-center'>Hoặc</div>
 
         <div className='mt-4 flex justify-center'>
-          <button className=' bg-red-500 text-white px-4 py-2 rounded-md text-[14px] hover:bg-red-600 w-full '>
-            <Link
-              className='flex items-center justify-center'
-              to='http://localhost:8000/auth/google/redirect'
-            >
+          <button
+            onClick={handleGoogleLogin}
+            className='bg-red-500 text-white px-4 py-2 rounded-md text-[14px] hover:bg-red-600 w-full'
+          >
+            <div className='flex items-center justify-center'>
               <FaGoogle className='mr-2' />
               Đăng nhập với Google
-            </Link>
+            </div>
           </button>
         </div>
 
@@ -182,7 +209,7 @@ function Login() {
           <div className='font-medium text-gray-500'>
             <span>Chưa có tài khoản? </span>
             <span className='hover:text-[#fe5c17]'>
-              <Link to='/signup'>Đăng kí</Link>
+              <Link to='/signup'>Đăng ký</Link>
             </span>
           </div>
         </div>

@@ -1,49 +1,51 @@
 import React from 'react';
-import { IoIosArrowRoundForward } from 'react-icons/io';
 import { Link } from 'react-router-dom';
+
 function Footer() {
   return (
     <div>
-      <div className='mt-10 w-full bg-[#F5F4F4] p-12'>
+      <div className='mt-10 w-full bg-[#F5F4F4] p-8'>
         <div className='container mx-auto lg:px-5 xl:px-24 md:px-4 px-5 mb-2 mt-2 xl:mt-5 lg:mt-12 md:mt-12 xl:mb-5 lg:mb-5 md:mb-5'>
-          {/* Grid cho cả phần chứa tên và phần input */}
+          {/* Grid cho cả phần chứa các mục và bản đồ */}
           <div className='grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4'>
-            {/* Phần chứa các cột "Tài khoản" */}
+            {/* Phần chứa các cột */}
             <div className='grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4'>
-              <div className='flex flex-col gap-3'>
-                <span className='text-sm sm:text-base md:text-base xl:text-base lg:text-base font-semibold'>
-                  Tài khoản
+              {/* Dịch vụ */}
+              <div className='flex flex-col gap-4'>
+                <span className='text-[18px] font-semibold text-black'>
+                  Dịch vụ
                 </span>
-                <div className='flex flex-col gap-1 text-sm text-[#010101]'>
-                  <span>Đăng nhập</span>
-                  <span>Đăng kí</span>
-                  <span>Vouchers</span>
+                <div className='flex flex-col gap-4 text-base text-black leading-relaxed'>
+                  <Link to='/warranty'>Bảo hành sản phẩm</Link>
+                  <Link to='/gift-wrap'>Gói quà tặng</Link>
+                  <Link to='/size-consulting'>Tư vấn Chọn Size</Link>
                 </div>
               </div>
 
-              <div className='flex flex-col gap-3'>
-                <span className='text-sm sm:text-base md:text-base xl:text-base lg:text-base font-semibold'>
+              {/* Giới thiệu */}
+              <div className='flex flex-col gap-4'>
+                <span className='text-[18px] font-semibold text-black'>
                   Giới thiệu
                 </span>
-                <div className='flex flex-col gap-1 text-sm text-[#010101]'>
+                <div className='flex flex-col gap-4 text-base text-black leading-relaxed'>
                   <span>Công ty thời trang FoxShop</span>
                   <span>Số xx - đường xxx - quận xx - TP.Hồ Chí Minh</span>
                   <span>SĐT: 0xxxxxxxxx</span>
                 </div>
               </div>
 
-              <div className='flex flex-col gap-3'>
-                <span className='text-sm sm:text-base md:text-base xl:text-base lg:text-base font-semibold'>
+              {/* Hỗ trợ */}
+              <div className='flex flex-col gap-4'>
+                <span className='text-[18px] font-semibold text-black'>
                   Hỗ trợ
                 </span>
-                <div className='flex flex-col gap-1 text-sm text-[#010101]'>
+                <div className='flex flex-col gap-4 text-base text-black leading-relaxed'>
                   <Link to='/help'>
                     <span>Trung tâm trợ giúp</span>
                   </Link>
                   <Link to='/return-policy'>
                     <span>Chính sách đổi trả</span>
                   </Link>
-
                   <Link to='/shipping-policy'>
                     <span>Vận chuyển</span>
                   </Link>
@@ -53,11 +55,12 @@ function Footer() {
                 </div>
               </div>
 
-              <div className='flex flex-col gap-3'>
-                <span className='text-sm sm:text-base md:text-base xl:text-base lg:text-base font-semibold'>
+              {/* Kết nối */}
+              <div className='flex flex-col gap-4'>
+                <span className='text-[18px] font-semibold text-black'>
                   Kết nối
                 </span>
-                <div className='flex flex-col gap-1 text-sm text-[#010101]'>
+                <div className='flex flex-col gap-4 text-base text-black leading-relaxed'>
                   <span>Facebook</span>
                   <span>Instagram</span>
                   <span>Twitter</span>
@@ -66,21 +69,23 @@ function Footer() {
               </div>
             </div>
 
-            {/* Phần chứa ô input */}
+            {/* Phần chứa bản đồ */}
             <div className='flex justify-end'>
-              <div className='relative w-full lg:w-[80%]'>
-                <input
-                  className='w-full p-2'
-                  type='text'
-                  placeholder='Nhập email của bạn'
-                />
-                <div className='absolute top-0 right-0 text-white p-2 bg-black text-2xl'>
-                  <IoIosArrowRoundForward />
-                </div>
+              <div className='w-full lg:w-[100%]'>
+                <iframe
+                  src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.600734158953!2d106.66017231533452!3d10.762622462403343!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4928d7b7b9%3A0x7f6049e108b5e8d!2sHo%20Chi%20Minh%20City%2C%20Vietnam!5e0!3m2!1sen!2s!4v1689177739034!5m2!1sen!2s'
+                  width='100%'
+                  height='200'
+                  style={{ border: 0 }}
+                  allowFullScreen=''
+                  loading='lazy'
+                  title='Google Map'
+                ></iframe>
               </div>
             </div>
           </div>
         </div>
+
         <div className='pt-5 text-center text-sm'>
           @ 2024 All Right Reserved
         </div>

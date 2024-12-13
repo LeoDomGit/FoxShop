@@ -377,25 +377,25 @@ function Profile() {
                   >
                     Cập nhật mật khẩu
                   </button>
-
-                  <button
-                    type='button'
-                    onClick={() => setIsDeleteModalOpen(true)}
-                    className='py-2 px-3 bg-red-600 text-white font-medium text-[14px] rounded-md'
-                  >
-                    Xóa tài khoản
-                  </button>
-
-                  {isDeleteModalOpen && (
-                    <Modal
-                      title='Xác nhận xóa tài khoản'
-                      message='Bạn có chắc chắn muốn xóa tài khoản này không? Hành động này không thể hoàn tác.'
-                      onConfirm={handleDelete}
-                      onCancel={() => setIsDeleteModalOpen(false)}
-                    />
-                  )}
                 </div>
               </form>
+
+              <button
+                type='button'
+                onClick={() => setIsDeleteModalOpen(true)}
+                className='py-2 px-3 bg-red-600 text-white font-medium text-[14px] rounded-md'
+              >
+                Xóa tài khoản
+              </button>
+
+              {isDeleteModalOpen && (
+                <Modal
+                  title='Xác nhận xóa tài khoản'
+                  message='Bạn có chắc chắn muốn xóa tài khoản này không? Hành động này không thể hoàn tác.'
+                  onConfirm={handleDelete}
+                  onCancel={() => setIsDeleteModalOpen(false)}
+                />
+              )}
             </div>
           </div>
         </div>

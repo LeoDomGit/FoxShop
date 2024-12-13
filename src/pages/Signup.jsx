@@ -73,11 +73,16 @@ function Signup() {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = process.env.REACT_APP_API_GOOGLE;
+  };
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
       <div className='bg-white p-8 rounded-md shadow-lg w-full max-w-lg'>
         <div className='flex items-center justify-center'>
-          <img className='w-32 object-cover ' src={logo} alt='' />
+          <Link to='/'>
+            <img className='w-32 object-cover ' src={logo} alt='Logo' />
+          </Link>
         </div>
 
         <form className='space-y-4' onSubmit={handleRegister}>
@@ -209,11 +214,14 @@ function Signup() {
           </button>
         </form>
 
-        <div className='mt-4 text-sm text-gray-700 text-center'>Or</div>
+        <div className='mt-4 text-sm text-gray-700 text-center'>Hoặc</div>
         <div className='mt-4 flex justify-center'>
-          <button className='flex items-center bg-red-500 text-white px-4 py-2 rounded-md text-[14px] hover:bg-red-600 w-full justify-center'>
+          <button
+            onClick={handleGoogleLogin}
+            className='flex items-center bg-red-500 text-white px-4 py-2 rounded-md text-[14px] hover:bg-red-600 w-full justify-center'
+          >
             <FaGoogle className='mr-2' />
-            Đăng kí với Google
+            Đăng nhập với Google
           </button>
         </div>
 

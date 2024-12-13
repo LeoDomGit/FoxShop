@@ -73,9 +73,7 @@ function Signup() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = process.env.REACT_APP_API_GOOGLE;
-  };
+  const googleURL = process.env.REACT_APP_API_GOOGLE;
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
       <div className='bg-white p-8 rounded-md shadow-lg w-full max-w-lg'>
@@ -216,13 +214,15 @@ function Signup() {
 
         <div className='mt-4 text-sm text-gray-700 text-center'>Hoặc</div>
         <div className='mt-4 flex justify-center'>
-          <button
-            onClick={handleGoogleLogin}
-            className='flex items-center bg-red-500 text-white px-4 py-2 rounded-md text-[14px] hover:bg-red-600 w-full justify-center'
+          <Link
+            to={googleURL}
+            className='bg-red-500 text-white px-4 py-2 rounded-md text-[14px] hover:bg-red-600 w-full'
           >
-            <FaGoogle className='mr-2' />
-            Đăng nhập với Google
-          </button>
+            <div className='flex items-center justify-center'>
+              <FaGoogle className='mr-2' />
+              Đăng nhập với Google
+            </div>
+          </Link>
         </div>
 
         <div className='mt-4 text-sm flex gap-1 font-medium text-gray-500 justify-center'>

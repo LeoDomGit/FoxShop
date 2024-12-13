@@ -105,9 +105,7 @@ function Login() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = process.env.REACT_APP_API_GOOGLE;
-  };
+  const googleURL = process.env.REACT_APP_API_GOOGLE;
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
@@ -189,15 +187,15 @@ function Login() {
         <div className='mt-4 text-sm text-gray-700 text-center'>Hoặc</div>
 
         <div className='mt-4 flex justify-center'>
-          <button
-            onClick={handleGoogleLogin}
+          <Link
+            to={googleURL}
             className='bg-red-500 text-white px-4 py-2 rounded-md text-[14px] hover:bg-red-600 w-full'
           >
             <div className='flex items-center justify-center'>
               <FaGoogle className='mr-2' />
               Đăng nhập với Google
             </div>
-          </button>
+          </Link>
         </div>
 
         <div className='mt-4 text-sm flex justify-between'>

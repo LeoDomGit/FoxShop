@@ -383,7 +383,7 @@ function Profile() {
               <button
                 type='button'
                 onClick={() => setIsDeleteModalOpen(true)}
-                className='py-2 px-3 bg-red-600 text-white font-medium text-[14px] rounded-md'
+                className='py-2 px-3 bg-red-600 text-white font-medium text-[14px] rounded-md mt-4'
               >
                 Xóa tài khoản
               </button>

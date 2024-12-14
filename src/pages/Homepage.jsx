@@ -45,18 +45,6 @@ function HomePage() {
   };
 
   useEffect(() => {
-    const fetchPolo = async () => {
-      try {
-        const response = await axios.get('/categories/ao-polo');
-        setPolo(response.data.data);
-      } catch (err) {
-        console.error('Error', err);
-      }
-    };
-    fetchPolo();
-  }, []);
-
-  useEffect(() => {
     const fetchBestSeller = async () => {
       try {
         const response = await axios.get('/products/best-seller');
@@ -66,6 +54,20 @@ function HomePage() {
       }
     };
     fetchBestSeller();
+  }, []);
+
+  useEffect(() => {
+    const fetchPolo = async () => {
+      try {
+        const response = await axios.get('/categories/ao-polo');
+        console.log('API Response:', response.data);
+        setPolo(response.data.data || []); // Đảm bảo `polo` luôn là một mảng
+      } catch (err) {
+        console.error('Error', err);
+        setPolo([]); // Xử lý lỗi bằng cách đặt `polo` về mảng trống
+      }
+    };
+    fetchPolo();
   }, []);
 
   useEffect(() => {

@@ -18,6 +18,10 @@ import ChatBox from './components/ChatBox';
 import Profile from './pages/Profile';
 import ThankYou from './pages/ThankYou';
 
+import WarrantyPage from './pages/WarrantyPage';
+import GiftWrapPage from './pages/GiftWrapPage';
+import SizeConsultingPage from './pages/SizeConsultingPage';
+
 import { useDispatch } from 'react-redux';
 import { loadCartFromLocalStorage } from './stores/cart';
 
@@ -45,7 +49,6 @@ function App() {
           <Route path='/post' element={<Post />} />
           {/* Route chi tiết sản phẩm */}
           <Route path='/products/:slug' element={<ProductDetail />} />
-
           <Route
             path='/categories/:categorySlug'
             element={<ProductPageByCategory />}
@@ -58,16 +61,12 @@ function App() {
           <Route path='/signup' element={<Signup />} />
           {/* Route trang quên mật khẩu */}
           <Route path='/forgot' element={<Forgot />} />
-
           {/* Route trang quản lý tài khoản */}
           <Route path='/profile' element={<Profile />} />
-
           <Route path='/thankyou' element={<ThankYou />} />
-
           {/* Route trang tìm kiếm */}
           <Route path='/search' element={<SearchPage />} />
           <Route path='/orders' element={<Orders />} />
-
           {/* Blog chi tiết */}
           <Route path='/post/:slug' element={<BlogDetail />} />
           {/* Trang giới thiệu */}
@@ -78,8 +77,16 @@ function App() {
           <Route path='/return-policy' element={<ReturnPolicy />} />
           {/* Trang Vận Chuyển */}
           <Route path='/shipping-policy' element={<ShippingPolicy />} />
-          {/*  Trang Chính Sách Mua Hàng */}
+          {/* Trang Chính Sách Mua Hàng */}
           <Route path='/purchase-policy' element={<PurchasePolicy />} />
+          {/* Các trang mới */}
+          <Route path='/warranty' element={<WarrantyPage />} />
+          <Route path='/gift-wrap' element={<GiftWrapPage />} />
+          <Route
+            path='/size-consulting'
+            element={<SizeConsultingPage />}
+          />{' '}
+          {/* Thêm route cho SizeConsultingPage */}
         </Routes>
         <ChatBox />
         <ToastContainer

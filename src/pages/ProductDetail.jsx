@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Carousel from '../components/Carousel';
@@ -26,6 +27,7 @@ function ProductDetail() {
   const navigate = useNavigate();
   const [sizeError, setSizeError] = useState(null);
   const [colorError, setColorError] = useState(null);
+  const [isSharing, setIsSharing] = useState(false);
 
   const handleSizeSelect = (size) => setSelectedSize(size);
   const handleColorSelect = (color) => setSelectedColor(color);
@@ -102,6 +104,24 @@ function ProductDetail() {
   if (!product) {
     return <p>Đang tải...</p>;
   }
+
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'FoxShop',
+          text: product.name,
+          url: window.location.href,
+        });
+        setIsSharing(false);
+      } else {
+        alert('Chia sẻ không được hỗ trợ trên trình duyệt này!');
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+      alert('Đã có lỗi xảy ra khi chia sẻ!');
+    }
+  };
 
   return (
     <>
@@ -244,7 +264,10 @@ function ProductDetail() {
                 Thêm vào giỏ
               </button>
 
-              <button className='py-3 px-5 border-[#fe5c17] border-[1px] text-[#fe5c17] hover:bg-[#fe5517] hover:text-white shadow-sm rounded-md'>
+              <button
+                onClick={handleShare}
+                className=' gap-2 py-3 px-5 border-[#fe5c17] border-[1px] text-[#fe5c17] hover:bg-[#fe5517] hover:text-white shadow-sm rounded-md'
+              >
                 <FiShare2 className='text-[18px]' />
               </button>
             </div>

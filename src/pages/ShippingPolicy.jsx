@@ -1,6 +1,6 @@
 import React from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '../components/Header'; // Đảm bảo đường dẫn đúng
+import Footer from '../components/Footer'; // Đảm bảo đường dẫn đúng
 import {
   FaShippingFast,
   FaTruck,

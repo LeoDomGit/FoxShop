@@ -63,7 +63,7 @@ function HomePage() {
         setPolo(response.data.data || []);
       } catch (err) {
         console.error('Error', err);
-        setPolo([]); 
+        setPolo([]);
       }
     };
     fetchPolo();

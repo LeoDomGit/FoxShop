@@ -38,12 +38,6 @@ function HomePage() {
   const [randomPolo, setRandomPolo] = useState([]);
   const [bestSeller, setBestSeller] = useState([]);
 
-  // GET RANDOM
-  const getRandomProducts = (products, count) => {
-    const shuffled = products.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  };
-
   useEffect(() => {
     const fetchBestSeller = async () => {
       try {
@@ -60,9 +54,9 @@ function HomePage() {
     const fetchPolo = async () => {
       try {
         const response = await axios.get('/categories/ao-polo');
-        setPolo(response.data.data || []);
+        setPolo(response.data.products.data || []);
       } catch (err) {
-        console.error('Error', err);
+        console.error('Error fetching polo data', err);
         setPolo([]);
       }
     };
@@ -71,8 +65,11 @@ function HomePage() {
 
   useEffect(() => {
     if (polo.length > 0) {
-      const randomProducts = getRandomProducts(polo, 4);
-      setRandomPolo(randomProducts);
+      const getRandomProducts = (products, count) => {
+        const shuffled = products.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+      };
+      setRandomPolo(getRandomProducts(polo, 4));
     }
   }, [polo]);
 
@@ -128,8 +125,8 @@ function HomePage() {
       />
       <div className='container mx-auto lg:px-5 xl:px-24 md:px-4  px-5 mb-2 mt-2 xl:mt-5 lg:mt-12  md:mt-12 xl:mb-5  lg:mb-5  md:mb-5'>
         <div className='grid grid-cols-2 md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-8 xl:gap-12 justify-between'>
-          {randomPolo.map((item) => (
-            <ProductItem key={item.id} product={item} />
+          {randomPolo.map((product) => (
+            <ProductItem key={product.id} product={product} />
           ))}
         </div>
       </div>

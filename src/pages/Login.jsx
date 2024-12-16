@@ -36,6 +36,7 @@ function Login() {
         localStorage.setItem('avatar', parsedUser.avatar || '');
         localStorage.setItem('name', parsedUser.name || '');
         localStorage.setItem('email', parsedUser.email || '');
+        localStorage.setItem('phone', parsedUser.phone || '');
         localStorage.setItem('idRole', parsedUser.idRole || '');
 
         dispatch(loadCartFromLocalStorage());
@@ -65,6 +66,7 @@ function Login() {
       localStorage.setItem('token', token);
       localStorage.setItem('userId', user.id);
       localStorage.setItem('avatar', user.avatar);
+      localStorage.setItem('phone', user.phone);
       localStorage.setItem('name', user.name);
 
       if (document.getElementById('rememberMe').checked) {
@@ -105,7 +107,8 @@ function Login() {
     }
   };
 
-  const googleURL = 'https://dashboard.foxshop.one/api/auth/google/redirect';
+  // const googleURL = 'https://dashboard.foxshop.one/api/auth/google/redirect';
+  const googleURL = 'http://localhost:8000/api/auth/google/redirect';
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>

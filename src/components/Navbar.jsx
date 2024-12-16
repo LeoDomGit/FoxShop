@@ -24,10 +24,9 @@ function Navbar({ ulClass = '', liClass = '' }) {
       <li className='list-none px-8 border-b w-full p-2 hover:bg-white hover:text-[#fe5c17] transition-all cursor-pointer lg:hidden md:hidden xl:hidden '>
         <Link to='/cart'>
           <div className='flex items-center gap-2 hover:text-[#fe5c17] '>
-            {/* <span className='text-base'>Giỏ hàng</span> */}
             <HiOutlineShoppingCart className='text-2xl' />
             {totalProducts > 0 && (
-              <span className='absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center'>
+              <span className='absolute left-[45px] bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center'>
                 {totalProducts}
               </span>
             )}

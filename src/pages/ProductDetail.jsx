@@ -149,7 +149,7 @@ function ProductDetail() {
               <span className='text-gray-500 text-[1rem] mb-2'>
                 {product.categories?.[0]?.name || 'No Category'}
               </span>
-              <span className='text-[24px]'>
+              <span className='text-[24px] text-[#fe5c17]'>
                 {product.name} {product.in_stock <= 0 && '(Hết hàng)'}
               </span>
             </div>

@@ -86,7 +86,6 @@ function App() {
             path='/size-consulting'
             element={<SizeConsultingPage />}
           />{' '}
-          {/* Thêm route cho SizeConsultingPage */}
         </Routes>
         <ChatBox />
         <ToastContainer

@@ -107,8 +107,8 @@ function Login() {
     }
   };
 
-  // const googleURL = 'https://dashboard.foxshop.one/api/auth/google/redirect';
-  const googleURL = 'http://localhost:8000/api/auth/google/redirect';
+  const googleURL = 'https://dashboard.foxshop.one/api/auth/google/redirect';
+  // const googleURL = 'http://localhost:8000/api/auth/google/redirect';
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>

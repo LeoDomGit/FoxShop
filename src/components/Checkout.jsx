@@ -24,23 +24,74 @@ function Checkout() {
   const carts = useSelector((store) => store.cart.items);
   const dispatch = useDispatch(); // Declare dispatch
 
-  const [vouchers, setVouchers] = useState([]);
+  // const [vouchers, setVouchers] = useState([]);
   const [selectedVoucher, setSelectedVoucher] = useState(null);
   const [discountAmount, setDiscountAmount] = useState(0);
+
+  const [vouchers, setVouchers] = useState([]);
+  const [receivedVouchers, setReceivedVouchers] = useState(new Set());
 
   const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchVouchers() {
       const userId = localStorage.getItem('userId');
-      const response = await axios.post('/voucher', { userid: userId });
-      setVouchers(response.data.data);
+      if (!userId) {
+        toast.error('User is not authenticated');
+        return;
+      }
+      try {
+        const response = await axios.get('voucher/user-vouchers', {
+          params: { userId: userId },
+        });
+        const userReceivedVouchers = new Set(response.data.receivedVoucherIds);
+        setVouchers(response.data.vouchers);
+        setReceivedVouchers(userReceivedVouchers);
+      } catch (error) {
+        toast.error('Không thể tải voucher');
+      }
     }
     fetchVouchers();
   }, []);
 
+  // const receiveVoucher = async (voucherId) => {
+  //   try {
+  //     const userId = localStorage.getItem('userId');
+  //     const response = await axios.post(`voucher/receive/${voucherId}`, {
+  //       userid: userId,
+  //     });
+
+  //     toast.success('Voucher nhận thành công!');
+  //     setReceivedVouchers(new Set([...receivedVouchers, voucherId])); // Add voucher to the received set
+  //   } catch (error) {
+  //     toast.error('Không thể nhận voucher. Vui lòng thử lại.');
+  //   }
+  // };
+
+  // const cancelVoucher = async (voucherId) => {
+  //   try {
+  //     const userId = localStorage.getItem('userId');
+  //     const response = await axios.post(`voucher/cancel/${voucherId}`, {
+  //       userid: userId,
+  //     });
+
+  //     toast.success('Voucher đã được hủy!');
+  //     setReceivedVouchers(
+  //       new Set([...receivedVouchers].filter((id) => id !== voucherId))
+  //     ); // Remove voucher from the received set
+  //   } catch (error) {
+  //     toast.error('Không thể hủy voucher. Vui lòng thử lại.');
+  //   }
+  // };
+
   const applyVoucher = async (voucherCode) => {
     try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        toast.error('Vui lòng đăng nhập để sử dụng voucher');
+        return;
+      }
+
       const response = await axios.post('/voucher/validate-voucher', {
         voucher_code: voucherCode,
         total_amount: totalPrice,
@@ -48,7 +99,9 @@ function Checkout() {
 
       if (response.data.check) {
         setSelectedVoucher(voucherCode);
-        setDiscountAmount(response.data.discount);
+        const discount = response.data.discount;
+        setDiscountAmount(discount);
+
         toast.success(`Đã áp dụng voucher ${voucherCode} cho đơn hàng`);
       } else {
         toast.error(response.data.msg);
@@ -57,6 +110,46 @@ function Checkout() {
       toast.error('Không thể áp dụng voucher. Vui lòng thử lại.');
     }
   };
+
+  const handleVoucherSelection = (voucher) => {
+    if (selectedVoucher) {
+      toast.error('Bạn chỉ có thể sử dụng một voucher duy nhất');
+      return;
+    }
+
+    if (totalPrice < voucher.minimum_monney) {
+      toast.error(
+        `Giỏ hàng của bạn phải có giá trị tối thiểu là ${voucher.minimum_monney.toLocaleString(
+          'vi-VN'
+        )} VND để áp dụng voucher này`
+      );
+      return;
+    }
+    applyVoucher(voucher.code);
+  };
+
+  const handleCancelVoucher = () => {
+    setSelectedVoucher(null);
+    setDiscountAmount(0);
+    toast.info('Voucher đã bị hủy');
+  };
+
+  // const handleVoucherSelection = (voucher) => {
+  //   if (selectedVoucher) {
+  //     toast.error('Bạn chỉ có thể sử dụng một voucher duy nhất');
+  //     return;
+  //   }
+
+  //   if (totalPrice < voucher.minimum_monney) {
+  //     toast.error(
+  //       `Giỏ hàng của bạn phải có giá trị tối thiểu là ${voucher.minimum_monney.toLocaleString(
+  //         'vi-VN'
+  //       )} VND để áp dụng voucher này`
+  //     );
+  //     return;
+  //   }
+  //   applyVoucher(voucher.code);
+  // };
 
   useEffect(() => {
     fetch(
@@ -171,10 +264,11 @@ function Checkout() {
         console.log('Order saved successfully:', response.data);
         dispatch(clearCart());
       } else if (paymentMethod === 'card') {
+        const totalAmountAfterDiscount = totalPrice - discountAmount;
         const response = await axios.post('/payment', {
           ...form,
           id_user: userId,
-          total_amount: totalPrice,
+          total_amount: totalAmountAfterDiscount,
           id_payment: 2,
           order_details: orderDetails,
           address: fullAddress,
@@ -224,21 +318,31 @@ function Checkout() {
                     ? `Giảm ${voucher.discount_value}%`
                     : `Giảm ${voucher.discount_value.toLocaleString(
                         'vi-VN'
-                      )} VND`}
-                  {` (Đơn tối thiểu: ${voucher.minimum_monney.toLocaleString(
-                    'vi-VN'
-                  )} VND)`}
+                      )} VND`}{' '}
+                  (Đơn tối thiểu:{' '}
+                  {voucher.minimum_monney.toLocaleString('vi-VN')} VND)
                 </p>
               </div>
+
               {voucher.usage_limit > 0 &&
-              new Date(voucher.end_date) > new Date() &&
-              totalPrice >= voucher.minimum_monney ? (
-                <button
-                  className='bg-[#fe5c17] shadow-md text-white text-xs px-4 py-1 rounded-md'
-                  onClick={() => applyVoucher(voucher.code)}
-                >
-                  Áp dụng
-                </button>
+              new Date(voucher.end_date) > new Date() ? (
+                <div className='flex gap-2'>
+                  {selectedVoucher === voucher.code ? (
+                    <button
+                      className='bg-green-500 text-white text-xs px-4 py-1 rounded-md cursor-not-allowed'
+                      disabled
+                    >
+                      Đã sử dụng
+                    </button>
+                  ) : (
+                    <button
+                      className='bg-[#fe5c17] shadow-md text-white text-xs px-4 py-1 rounded-md'
+                      onClick={() => handleVoucherSelection(voucher)}
+                    >
+                      Áp dụng
+                    </button>
+                  )}
+                </div>
               ) : (
                 <button
                   className='bg-gray-400 shadow-md text-white text-xs px-4 py-1 rounded-md'
@@ -251,6 +355,22 @@ function Checkout() {
           ))}
         </ul>
       </div>
+
+      {/* Show applied voucher and cancel button */}
+      {selectedVoucher && (
+        <div className='mb-4 bg-green-100 p-4 rounded-lg shadow-md'>
+          <p className='font-semibold'>Voucher đã áp dụng: {selectedVoucher}</p>
+          <p className='text-sm'>
+            Giảm: {discountAmount.toLocaleString('vi-VN')} VND
+          </p>
+          <button
+            onClick={handleCancelVoucher}
+            className='bg-red-500 text-white text-sm mt-2 py-1 shadow-md px-3 rounded-md'
+          >
+            Hủy Voucher
+          </button>
+        </div>
+      )}
 
       <div className=' bg-white rounded-lg shadow-md p-4'>
         <h4 className='text-lg font-semibold mb-6'>Thông tin thanh toán</h4>

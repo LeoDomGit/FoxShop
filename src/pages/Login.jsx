@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
-import { loadCartFromLocalStorage } from '../stores/cart';
 import { useDispatch } from 'react-redux';
+import { loadCartFromLocalStorage } from '../stores/cart';
 import { toast } from 'react-toastify';
 import logo from '../assets/logo.png';
 
 function Login() {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
@@ -19,34 +18,11 @@ function Login() {
 
   useEffect(() => {
     document.title = 'Đăng nhập';
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
-    const user = params.get('user');
-
-    console.log('Token:', token);
-    console.log('User:', user);
-
-    if (token && user) {
-      try {
-        const parsedUser = JSON.parse(decodeURIComponent(user));
-
-        console.log('Parsed User:', parsedUser);
-        localStorage.setItem('token', token);
-        localStorage.setItem('userId', parsedUser.id || '');
-        localStorage.setItem('avatar', parsedUser.avatar || '');
-        localStorage.setItem('name', parsedUser.name || '');
-        localStorage.setItem('email', parsedUser.email || '');
-        localStorage.setItem('phone', parsedUser.phone || '');
-        localStorage.setItem('idRole', parsedUser.idRole || '');
-
-        dispatch(loadCartFromLocalStorage());
-        toast.success('Đăng nhập thành công!');
-        navigate('/');
-      } catch (error) {
-        toast.error('Lỗi khi xử lý thông tin đăng nhập!');
-      }
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+      setEmail(rememberedEmail);
     }
-  }, [location.search, dispatch, navigate]);
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -59,15 +35,14 @@ function Login() {
         remember: document.getElementById('rememberMe').checked,
       });
 
-      const token = response.data.token;
-      const user = response.data.user;
+      const { token, user } = response.data;
 
-      // Lưu token và thông tin user vào localStorage
+      // Lưu thông tin user và token vào localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('userId', user.id);
-      localStorage.setItem('avatar', user.avatar);
-      localStorage.setItem('phone', user.phone);
+      localStorage.setItem('avatar', user.avatar || '');
       localStorage.setItem('name', user.name);
+      localStorage.setItem('phone', user.phone || '');
 
       if (document.getElementById('rememberMe').checked) {
         localStorage.setItem('rememberedEmail', email);
@@ -75,8 +50,6 @@ function Login() {
         localStorage.removeItem('rememberedEmail');
       }
 
-      setEmail('');
-      setPassword('');
       dispatch(loadCartFromLocalStorage());
 
       toast.update(loadingToastId, {
@@ -87,7 +60,7 @@ function Login() {
       });
 
       navigate('/');
-    } catch (e) {
+    } catch (error) {
       toast.update(loadingToastId, {
         render: 'Đăng nhập thất bại, vui lòng thử lại!',
         type: 'error',
@@ -95,8 +68,8 @@ function Login() {
         autoClose: 2000,
       });
 
-      if (e.response && e.response.data.errors) {
-        const errorData = e.response.data.errors;
+      if (error.response && error.response.data.errors) {
+        const errorData = error.response.data.errors;
         setErrors({
           email: errorData.email ? errorData.email[0] : '',
           password: errorData.password ? errorData.password[0] : '',
@@ -107,7 +80,6 @@ function Login() {
     }
   };
 
-  // const googleURL = 'https://dashboard.foxshop.one/api/auth/google/redirect';
   const googleURL = 'http://localhost:8000/api/auth/google/redirect';
 
   return (
@@ -115,7 +87,7 @@ function Login() {
       <div className='bg-white p-8 rounded-md shadow-lg w-full max-w-lg'>
         <div className='flex items-center justify-center'>
           <Link to='/'>
-            <img className='w-32 object-cover ' src={logo} alt='Logo' />
+            <img className='w-32 object-cover' src={logo} alt='Logo' />
           </Link>
         </div>
 
@@ -173,7 +145,7 @@ function Login() {
             <input
               type='checkbox'
               id='rememberMe'
-              className='checked:bg-[#fe5c17]'
+              className='checked:accent-[#fe5c17]]'
               defaultChecked={!!localStorage.getItem('rememberedEmail')}
             />
             <span className='text-[14px]'>Ghi nhớ tài khoản</span>

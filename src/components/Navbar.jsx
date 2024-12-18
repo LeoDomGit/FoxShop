@@ -26,7 +26,7 @@ function Navbar({ ulClass = '', liClass = '' }) {
           <div className='flex items-center gap-2 hover:text-[#fe5c17] '>
             <HiOutlineShoppingCart className='text-2xl' />
             {totalProducts > 0 && (
-              <span className='absolute left-[45px] bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center'>
+              <span className='absolute left-[45px] bottom-[20px] bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center'>
                 {totalProducts}
               </span>
             )}

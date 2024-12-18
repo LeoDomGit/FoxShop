@@ -16,6 +16,9 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({ email: '', password: '' });
 
+  // const googleURL = 'http://localhost:8000/api/auth/google/redirect';
+  const googleURL = 'https://dashboard.foxshop.one/api/auth/google/redirect';
+
   useEffect(() => {
     document.title = 'Đăng nhập';
     const rememberedEmail = localStorage.getItem('rememberedEmail');
@@ -23,6 +26,24 @@ function Login() {
       setEmail(rememberedEmail);
     }
   }, []);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const user = JSON.parse(decodeURIComponent(urlParams.get('user')));
+
+    if (token && user) {
+      localStorage.setItem('token', token);
+      localStorage.setItem('userId', user.id);
+      localStorage.setItem('avatar', user.avatar || '');
+      localStorage.setItem('name', user.name);
+      localStorage.setItem('phone', user.phone || '');
+
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -79,8 +100,6 @@ function Login() {
       }
     }
   };
-
-  const googleURL = 'http://localhost:8000/api/auth/google/redirect';
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>

@@ -18,8 +18,6 @@ function Login() {
 
   useEffect(() => {
     document.title = 'Đăng nhập';
-
-    // Load email từ localStorage nếu có
     const rememberedEmail = localStorage.getItem('rememberedEmail');
     if (rememberedEmail) {
       setEmail(rememberedEmail);
@@ -46,7 +44,6 @@ function Login() {
       localStorage.setItem('name', user.name);
       localStorage.setItem('phone', user.phone || '');
 
-      // Nếu người dùng chọn "Ghi nhớ tài khoản", lưu email
       if (document.getElementById('rememberMe').checked) {
         localStorage.setItem('rememberedEmail', email);
       } else {
@@ -148,7 +145,7 @@ function Login() {
             <input
               type='checkbox'
               id='rememberMe'
-              className='checked:bg-[#fe5c17]'
+              className='checked:accent-[#fe5c17]]'
               defaultChecked={!!localStorage.getItem('rememberedEmail')}
             />
             <span className='text-[14px]'>Ghi nhớ tài khoản</span>
